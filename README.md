@@ -2,6 +2,8 @@
 
 Determine the geographical location of website visitors based on the IP addresses.
 
+----------
+
 ## Installation
 
 - [GeoIP for Laravel 4 on GitHub](https://github.com/torann/laravel-4-geoip)
@@ -76,3 +78,9 @@ array (
 ### [MaxMind](http://www.maxmind.com)
 
 - **Database Service**: To use the database version of MaxMind services download the `GeoLite2-City.mmdb` from [http://dev.maxmind.com/geoip/geoip2/geolite2/](http://dev.maxmind.com/geoip/geoip2/geolite2/) and extract it to `/app/database/maxmind/`. And that's it.
+
+
+----------
+
+
+*This product includes GeoLite2 data created by MaxMind, available from [http://www.maxmind.com](http://www.maxmind.com).*
