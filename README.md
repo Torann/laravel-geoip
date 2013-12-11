@@ -1,6 +1,6 @@
 # GeoIP for Laravel 4 - Alpha
 
-Determine the geographical location of website visitors based on the IP addresses.
+Determine the geographical location of website visitors based on their IP addresses.
 
 ----------
 
