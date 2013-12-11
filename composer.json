@@ -1,0 +1,28 @@
+{
+    "name": "torann/geoip",
+    "description": "Supports the two main GeoIP services (infoDB and Maxmind).",
+    "keywords": ["laravel", "laravel4", "geoip", "location", "geolocation"],
+	"license": "BSD 2-Clause",
+    "authors": [
+        {
+            "name": "Daniel Stainback",
+            "email": "daniel@lyften.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.0.x",
+		"geoip2/geoip2": "0.5.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Torann\\GeoIP": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.2-dev"
+        }
+    },
+    "minimum-stability": "dev"
+}
