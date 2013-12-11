@@ -1,8 +1,8 @@
-## GeoIP for Laravel 4 - Alpha
+# GeoIP for Laravel 4 - Alpha
 
-Determine the geographical location of website visitors based on the IP addresses powered by [MaxMind](http://www.maxmind.com).
+Determine the geographical location of website visitors based on the IP addresses.
 
-### Installation
+## Installation
 
 - [GeoIP for Laravel 4 on GitHub](https://github.com/torann/laravel-4-geoip)
 
@@ -40,7 +40,7 @@ Create configuration file using artisan
 $ php artisan config:publish torann/geoip
 ~~~
 
-### Usage
+## Usage
 
 Get the location data for a website visitor:
 
@@ -57,6 +57,7 @@ $location = GeoIP::getLocation( '232.223.11.11' );
 ```
 
 ### Example Data
+
 ```php
 array (
     "ip"           => "232.223.11.11",
@@ -69,4 +70,9 @@ array (
     "lon"          => -72.88
 );
 ```
+## Services
 
+
+### [MaxMind](http://www.maxmind.com)
+
+- **Database Service**: To use the database version of MaxMind services download the `GeoLite2-City.mmdb` from [http://dev.maxmind.com/geoip/geoip2/geolite2/](http://dev.maxmind.com/geoip/geoip2/geolite2/) and extract it to `/app/database/maxmind/`. And that's it.

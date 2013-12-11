@@ -123,7 +123,7 @@ class GeoIP {
 			$maxmind = new Client($settings['user_id'], $settings['license_key']);
 		}
 		else {
-			$maxmind = new Reader(dirname(__FILE__).'/app/database/maxmind/GeoIP2-City.mmdb');
+			$maxmind = new Reader(app_path().'/database/maxmind/GeoIP2-City.mmdb');
 		}
 
 		$record = $maxmind->city($ip);
