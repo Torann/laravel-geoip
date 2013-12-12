@@ -63,8 +63,8 @@ class GeoIP {
 		"city" 			=> "New Haven",
 		"state" 		=> "CT",
 		"postal_code" 	=> "06510",
-		"lat" 			=> 41.28,
-		"lon" 			=> -72.88
+		"lat" 			=> 41.31,
+		"lon" 			=> -72.92
 	);
 
 	/**
