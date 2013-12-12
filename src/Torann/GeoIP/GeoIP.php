@@ -1,11 +1,25 @@
 <?php namespace Torann\GeoIP;
 
 use GeoIp2\Database\Reader;
-
-use Cookie;
-use Config;
+use Illuminate\Config\Repository;
+use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Session\Store as SessionStore;
 
 class GeoIP {
+
+	/**
+	 * The session store.
+	 *
+	 * @var \Illuminate\Session\Store
+	 */
+	protected $session;
+
+    /**
+     * Illuminate config repository instance.
+     *
+     * @var \Illuminate\Config\Repository
+     */
+    protected $config;
 
 	/**
 	 * Remote Machine IP address.
@@ -13,6 +27,13 @@ class GeoIP {
 	 * @var float
 	 */
 	protected $remote_ip = null;
+
+	/**
+	 * Location data.
+	 *
+	 * @var array
+	 */
+	protected $location = null;
 
 	/**
 	 * Reserved IP address.
@@ -47,29 +68,28 @@ class GeoIP {
 	);
 
 	/**
-	 * Location data.
+	 * Create a new GeoIP instance.
 	 *
-	 * @var array
-	 */
-	protected $location = null;
-
-	/**
-	 * Create a new instance.
-	 *
+     * @param  \Illuminate\Config\Repository  $config
+	 * @param  \Illuminate\Session\Store  $session
+	 * @param  \Symfony\Component\HttpFoundation\Request   $request
 	 * @return void
 	 */
-	public function __construct()
+	public function __construct(Repository $config, SessionStore $session, Request $request)
 	{
-		$this->remote_ip = $this->default_location['ip'] = $_SERVER["REMOTE_ADDR"];
+		$this->config = $config;
+		$this->session = $session;
+
+		$this->remote_ip = $this->default_location['ip'] = $request->getClientIp();
 	}
 
 	/**
-	 * Save location data in a cookie.
+	 * Save location data in the session.
 	 *
 	 * @return void
 	 */
 	function saveLocation() {
-		Cookie::make('geoip-location', $this->location, 10080);
+		$this->session->set('geoip-location', $this->location);
 	}
 
 	/**
@@ -91,8 +111,8 @@ class GeoIP {
 	}
 
 	private function find( $ip = null ) {
-		// Check cookies
-		if ( $ip === null && $position = Cookie::get('geoip-location') ) {
+		// Check Session
+		if ( $ip === null && $position = $this->session->get('geoip-location') ) {
 			if($position['ip'] === $this->remote_ip) {
 				return $position;
 			}
@@ -107,7 +127,7 @@ class GeoIP {
 		if( $this->checkIp( $ip ) ) {
 
 			// Call default service
-			$service = 'locate_'.Config::get('geoip::service');
+			$service = 'locate_'.$this->config->get('geoip::service');
 			return $this->$service($ip);
 		}
 
@@ -117,7 +137,7 @@ class GeoIP {
 	// Maxmind
 	private function locate_maxmind( $ip ) {
 
-		$settings = Config::get('geoip::maxmind');
+		$settings = $this->config->get('geoip::maxmind');
 
 		if($settings['type'] === 'web_service') {
 			$maxmind = new Client($settings['user_id'], $settings['license_key']);
