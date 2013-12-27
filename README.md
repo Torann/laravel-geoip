@@ -1,5 +1,7 @@
 # GeoIP for Laravel 4 - Alpha
 
+[![Latest Stable Version](https://poser.pugx.org/torann/geoip/v/stable.png)](https://packagist.org/packages/torann/geoip) [![Total Downloads](https://poser.pugx.org/torann/geoip/downloads.png)](https://packagist.org/packages/torann/geoip)
+
 Determine the geographical location of website visitors based on their IP addresses.
 
 ----------
