@@ -64,7 +64,8 @@ class GeoIP {
 		"state" 		=> "CT",
 		"postal_code" 	=> "06510",
 		"lat" 			=> 41.31,
-		"lon" 			=> -72.92
+		"lon" 			=> -72.92,
+		"deafult"       => true
 	);
 
 	/**
@@ -128,6 +129,7 @@ class GeoIP {
 
 			// Call default service
 			$service = 'locate_'.$this->config->get('geoip::service');
+
 			return $this->$service($ip);
 		}
 
@@ -156,7 +158,8 @@ class GeoIP {
 			"state" 		=> $record->mostSpecificSubdivision->isoCode,
 			"postal_code" 	=> $record->postal->code,
 			"lat" 			=> $record->location->latitude,
-			"lon" 			=> $record->location->longitude
+			"lon" 			=> $record->location->longitude,
+			"deafult"       => false
 		);
 
 		unset($record);
