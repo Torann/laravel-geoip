@@ -65,7 +65,7 @@ class GeoIP {
 		"postal_code" 	=> "06510",
 		"lat" 			=> 41.31,
 		"lon" 			=> -72.92,
-		"deafult"       => true
+		"default"       => true
 	);
 
 	/**
@@ -159,7 +159,7 @@ class GeoIP {
 			"postal_code" 	=> $record->postal->code,
 			"lat" 			=> $record->location->latitude,
 			"lon" 			=> $record->location->longitude,
-			"deafult"       => false
+			"default"       => false
 		);
 
 		unset($record);
