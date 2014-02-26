@@ -2,7 +2,6 @@
 
 use GeoIp2\Database\Reader;
 use Illuminate\Config\Repository;
-use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Session\Store as SessionStore;
 
 class GeoIP {
@@ -73,15 +72,14 @@ class GeoIP {
 	 *
      * @param  \Illuminate\Config\Repository  $config
 	 * @param  \Illuminate\Session\Store  $session
-	 * @param  \Symfony\Component\HttpFoundation\Request   $request
 	 * @return void
 	 */
-	public function __construct(Repository $config, SessionStore $session, Request $request)
+	public function __construct(Repository $config, SessionStore $session)
 	{
 		$this->config = $config;
 		$this->session = $session;
 
-		$this->remote_ip = $this->default_location['ip'] = $request->getClientIp();
+		$this->remote_ip = $this->default_location['ip'] = $this->getClientIP();
 	}
 
 	/**
@@ -99,7 +97,8 @@ class GeoIP {
 	 * @param  string $ip Optional
 	 * @return array
 	 */
-	function getLocation( $ip = null ) {
+	function getLocation( $ip = null )
+	{
 		// Get location data
 		$this->location = $this->find( $ip );
 
@@ -111,7 +110,14 @@ class GeoIP {
 		return $this->location;
 	}
 
-	private function find( $ip = null ) {
+	/**
+	 * Find location from IP.
+	 *
+	 * @param  string $ip Optional
+	 * @return array
+	 */
+	private function find( $ip = null )
+	{
 		// Check Session
 		if ( $ip === null && $position = $this->session->get('geoip-location') )
 		{
@@ -138,9 +144,14 @@ class GeoIP {
 		return $this->default_location;
 	}
 
-	// Maxmind
-	private function locate_maxmind( $ip ) {
-
+	/**
+	 * Maxmind Service.
+	 *
+	 * @param  string $ip
+	 * @return array
+	 */
+	private function locate_maxmind( $ip )
+	{
 		$settings = $this->config->get('geoip::maxmind');
 
 		if($settings['type'] === 'web_service') {
@@ -169,8 +180,48 @@ class GeoIP {
 		return $location;
 	}
 
-	//Checks if the ip is not local or empty
-	private function checkIp( $ip ) {
+	/**
+	 * Get the client IP address.
+	 *
+	 * @return string
+	 */
+	private function getClientIP()
+	{
+		if (getenv('HTTP_CLIENT_IP')) {
+			$ipaddress = getenv('HTTP_CLIENT_IP');
+		}
+		else if(getenv('HTTP_X_FORWARDED_FOR')) {
+			$ipaddress = getenv('HTTP_X_FORWARDED_FOR');
+		}
+		else if(getenv('HTTP_X_FORWARDED')) {
+			$ipaddress = getenv('HTTP_X_FORWARDED');
+		}
+		else if(getenv('HTTP_FORWARDED_FOR')) {
+			$ipaddress = getenv('HTTP_FORWARDED_FOR');
+		}
+		else if(getenv('HTTP_FORWARDED')) {
+			$ipaddress = getenv('HTTP_FORWARDED');
+		}
+		else if(getenv('REMOTE_ADDR')) {
+			$ipaddress = getenv('REMOTE_ADDR');
+		}
+		else if( isset($_SERVER['REMOTE_ADDR']) ) {
+			$ipaddress = $_SERVER['REMOTE_ADDR'];
+		}
+		else {
+			$ipaddress = '127.0.0.0';
+		}
+
+		return $ipaddress;
+	}
+
+	/**
+	 * Checks if the ip is not local or empty.
+	 *
+	 * @return bool
+	 */
+	private function checkIp( $ip )
+	{
 		$longip = ip2long($ip);
 
 		if ( !empty($ip) ) {
