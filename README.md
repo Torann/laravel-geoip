@@ -71,7 +71,8 @@ array (
     "state"        => "CT",
     "postal_code"  => "06510",
     "lat"          => 41.28,
-    "lon"          => -72.88
+    "lon"          => -72.88,
+    "timezone"     => "America/New_York"
 );
 ```
 ## Services
