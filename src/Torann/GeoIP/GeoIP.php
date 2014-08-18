@@ -61,10 +61,11 @@ class GeoIP {
 		"country" 		=> "United States",
 		"city" 			=> "New Haven",
 		"state" 		=> "CT",
-		"postal_code" 	=> "06510",
+		"postal_code" 		=> "06510",
 		"lat" 			=> 41.31,
 		"lon" 			=> -72.92,
-		"default"       => true
+		"timezone" 		=> "America/New_York",
+		"default"       	=> true
 	);
 
 	/**
@@ -169,10 +170,11 @@ class GeoIP {
 			"country" 		=> $record->country->name,
 			"city" 			=> $record->city->name,
 			"state" 		=> $record->mostSpecificSubdivision->isoCode,
-			"postal_code" 	=> $record->postal->code,
+			"postal_code" 		=> $record->postal->code,
 			"lat" 			=> $record->location->latitude,
 			"lon" 			=> $record->location->longitude,
-			"default"       => false
+			"timezone" 		=> $record->location->timeZone,
+			"default"       	=> false
 		);
 
 		unset($record);

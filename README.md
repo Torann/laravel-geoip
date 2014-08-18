@@ -71,7 +71,8 @@ array (
     "state"        => "CT",
     "postal_code"  => "06510",
     "lat"          => 41.28,
-    "lon"          => -72.88
+    "lon"          => -72.88,
+    "timezone"     => "America/New_York"
 );
 ```
 ## Services
@@ -80,4 +81,5 @@ array (
 ### [MaxMind](http://www.maxmind.com)
 
 - **Database Service**: To use the database version of MaxMind services download the `GeoLite2-City.mmdb` from [http://dev.maxmind.com/geoip/geoip2/geolite2/](http://dev.maxmind.com/geoip/geoip2/geolite2/) and extract it to `/app/database/maxmind/`. And that's it.
+
 
