@@ -1,6 +1,8 @@
 <?php namespace Torann\GeoIP;
 
 use GeoIp2\Database\Reader;
+use GeoIp2\WebService\Client;
+
 use Illuminate\Config\Repository;
 use Illuminate\Session\Store as SessionStore;
 
@@ -88,7 +90,8 @@ class GeoIP {
 	 *
 	 * @return void
 	 */
-	function saveLocation() {
+	function saveLocation()
+    {
 		$this->session->set('geoip-location', $this->location);
 	}
 
