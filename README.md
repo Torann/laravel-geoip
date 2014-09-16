@@ -73,8 +73,14 @@ array (
     "lat"          => 41.28,
     "lon"          => -72.88,
     "timezone"     => "America/New_York"
+    "default"      => false
 );
 ```
+
+#### Note
+
+In the case that a location is not found the fallback location will be returned with the `default` parameter set to `true`. In a future release I'll make the default location customizable. For not it is New Haven, CT.
+
 ## Services
 
 
