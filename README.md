@@ -72,7 +72,8 @@ array (
     "postal_code"  => "06510",
     "lat"          => 41.28,
     "lon"          => -72.88,
-    "timezone"     => "America/New_York"
+    "timezone"     => "America/New_York",
+    "continent"    => "NA",
     "default"      => false
 );
 ```
