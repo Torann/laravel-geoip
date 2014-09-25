@@ -67,6 +67,7 @@ class GeoIP {
 		"lat" 			=> 41.31,
 		"lon" 			=> -72.92,
 		"timezone" 		=> "America/New_York",
+		"continent"		=> "NA",
 		"default"       	=> true
 	);
 
@@ -177,6 +178,7 @@ class GeoIP {
 			"lat" 			=> $record->location->latitude,
 			"lon" 			=> $record->location->longitude,
 			"timezone" 		=> $record->location->timeZone,
+			"continent"		=> $record->continent->code,
 			"default"       	=> false
 		);
 
