@@ -3,6 +3,9 @@
 use GeoIp2\Database\Reader;
 use GeoIp2\WebService\Client;
 
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 use Illuminate\Config\Repository;
 use Illuminate\Session\Store as SessionStore;
 
@@ -158,17 +161,18 @@ class GeoIP {
 	private function locate_maxmind( $ip )
 	{
 		$settings = $this->config->get('geoip::maxmind');
-
+                
 		if($settings['type'] === 'web_service') {
 			$maxmind = new Client($settings['user_id'], $settings['license_key']);
 		}
 		else {
 			$maxmind = new Reader(app_path().'/database/maxmind/GeoLite2-City.mmdb');
 		}
-
-		$record = $maxmind->city($ip);
-
-		$location = array(
+                
+                try {
+                    $record = $maxmind->city($ip);
+                    
+                    $location = array(
 			"ip"			=> $ip,
 			"isoCode" 		=> $record->country->isoCode,
 			"country" 		=> $record->country->name,
@@ -180,7 +184,18 @@ class GeoIP {
 			"timezone" 		=> $record->location->timeZone,
 			"continent"		=> $record->continent->code,
 			"default"       	=> false
-		);
+                    );
+                }
+                catch (\GeoIp2\Exception\AddressNotFoundException $e) {
+                    $location = $this->default_location;
+
+                    $logFile = 'geoip';
+
+                    $log = new Logger($logFile);
+                    $log->pushHandler(new StreamHandler(storage_path().'/logs/'.$logFile, Logger::ERROR));
+
+                    $log->addError($e);
+                }
 
 		unset($record);
 
