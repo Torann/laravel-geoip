@@ -244,20 +244,26 @@ class GeoIP {
 	 */
 	private function checkIp( $ip )
 	{
-		$longip = ip2long($ip);
+                if ( filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ) {
+                        $longip = ip2long($ip);
 
-		if ( !empty($ip) ) {
+                        if ( !empty($ip) ) {
 
-			foreach ($this->reserved_ips as $r) {
-				$min = ip2long($r[0]);
-				$max = ip2long($r[1]);
+                                    foreach ($this->reserved_ips as $r) {
+                                            $min = ip2long($r[0]);
+                                            $max = ip2long($r[1]);
 
-				if ($longip >= $min && $longip <= $max) {
-					return false;
-				}
-			}
-			return true;
-		}
+                                            if ($longip >= $min && $longip <= $max) {
+                                                    return false;
+                                            }
+                                    }
+                                    return true;
+                        } 
+                }
+                elseif( filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ) {
+                        return true;
+                }
+
 
 		return false;
 	}
