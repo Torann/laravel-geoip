@@ -244,7 +244,7 @@ class GeoIP {
 	 */
 	private function checkIp( $ip )
 	{
-                if ( filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ) {
+                //if ( filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ) {
                         $longip = ip2long($ip);
 
                         if ( !empty($ip) ) {
@@ -259,10 +259,10 @@ class GeoIP {
                                     }
                                     return true;
                         } 
-                }
-                elseif( filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ) {
-                        return true;
-                }
+                //}
+                //elseif( filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ) {
+                //        return true;
+                //}
 
 
 		return false;
