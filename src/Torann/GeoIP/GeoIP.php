@@ -86,7 +86,7 @@ class GeoIP {
 			"timezone" 		=> $settings['timezone'],
 			"continent"		=> $settings['continent'],
 			"default"     => true,
-		)
+		);
 	}
 
 	/**
