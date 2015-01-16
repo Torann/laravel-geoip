@@ -74,7 +74,7 @@ class GeoIP {
 	/**
 	 * Create a new GeoIP instance.
 	 *
-     * @param  \Illuminate\Config\Repository  $config
+   * @param  \Illuminate\Config\Repository  $config
 	 * @param  \Illuminate\Session\Store  $session
 	 * @return void
 	 */
@@ -84,6 +84,21 @@ class GeoIP {
 		$this->session = $session;
 
 		$this->remote_ip = $this->default_location['ip'] = $this->getClientIP();
+
+		$settings = $this->config->get('geoip::default_location');
+		$this->default_location = array (
+			"ip" 					=> $settings['ip'],
+			"isoCode" 		=> $settings['isoCode'],
+			"country" 		=> $settings['country'],
+			"city" 				=> $settings['city'],
+			"state" 			=> $settings['state'],
+			"postal_code" => $settings['postal_code'],
+			"lat" 				=> $settings['lat'],
+			"lon" 				=> $settings['lon'],
+			"timezone" 		=> $settings['timezone'],
+			"continent"		=> $settings['continent'],
+			"default"     => $settings['default'],
+		)
 	}
 
 	/**
