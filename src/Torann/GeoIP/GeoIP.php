@@ -53,23 +53,11 @@ class GeoIP {
 	);
 
 	/**
-	 * Default Location data.
+	 * Default Location data. Provided by config file.
 	 *
 	 * @var array
 	 */
-	protected $default_location = array (
-		"ip" 			=> "127.0.0.0",
-		"isoCode" 		=> "US",
-		"country" 		=> "United States",
-		"city" 			=> "New Haven",
-		"state" 		=> "CT",
-		"postal_code" 		=> "06510",
-		"lat" 			=> 41.31,
-		"lon" 			=> -72.92,
-		"timezone" 		=> "America/New_York",
-		"continent"		=> "NA",
-		"default"       	=> true
-	);
+	protected $default_location = null;
 
 	/**
 	 * Create a new GeoIP instance.
@@ -97,7 +85,7 @@ class GeoIP {
 			"lon" 				=> $settings['lon'],
 			"timezone" 		=> $settings['timezone'],
 			"continent"		=> $settings['continent'],
-			"default"     => $settings['default'],
+			"default"     => true,
 		)
 	}
 

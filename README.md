@@ -80,7 +80,7 @@ array (
 
 #### Note
 
-In the case that a location is not found the fallback location will be returned with the `default` parameter set to `true`. In a future release I'll make the default location customizable. For not it is New Haven, CT.
+In the case that a location is not found the fallback location will be returned with the `default` parameter set to `true`. Default location can be customized using `default_location` parameter in config file.
 
 ## Services
 
