@@ -53,28 +53,16 @@ class GeoIP {
 	);
 
 	/**
-	 * Default Location data.
+	 * Default Location data. Provided by config file.
 	 *
 	 * @var array
 	 */
-	protected $default_location = array (
-		"ip" 			=> "127.0.0.0",
-		"isoCode" 		=> "US",
-		"country" 		=> "United States",
-		"city" 			=> "New Haven",
-		"state" 		=> "CT",
-		"postal_code" 		=> "06510",
-		"lat" 			=> 41.31,
-		"lon" 			=> -72.92,
-		"timezone" 		=> "America/New_York",
-		"continent"		=> "NA",
-		"default"       	=> true
-	);
+	protected $default_location = null;
 
 	/**
 	 * Create a new GeoIP instance.
 	 *
-     * @param  \Illuminate\Config\Repository  $config
+   * @param  \Illuminate\Config\Repository  $config
 	 * @param  \Illuminate\Session\Store  $session
 	 * @return void
 	 */
@@ -84,6 +72,21 @@ class GeoIP {
 		$this->session = $session;
 
 		$this->remote_ip = $this->default_location['ip'] = $this->getClientIP();
+
+		$settings = $this->config->get('geoip::default_location');
+		$this->default_location = array (
+			"ip" 					=> $settings['ip'],
+			"isoCode" 		=> $settings['isoCode'],
+			"country" 		=> $settings['country'],
+			"city" 				=> $settings['city'],
+			"state" 			=> $settings['state'],
+			"postal_code" => $settings['postal_code'],
+			"lat" 				=> $settings['lat'],
+			"lon" 				=> $settings['lon'],
+			"timezone" 		=> $settings['timezone'],
+			"continent"		=> $settings['continent'],
+			"default"     => true,
+		);
 	}
 
 	/**
