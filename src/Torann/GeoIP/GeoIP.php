@@ -127,10 +127,7 @@ class GeoIP {
 		// Check Session
 		if ($ip === null && $position = $this->session->get('geoip-location'))
 		{
-			// TODO: Remove default check on 2/28/14
-			if(isset($position['default']) && $position['ip'] === $this->remote_ip) {
-				return $position;
-			}
+			return $position;
 		}
 
 		// If IP not set, user remote IP
