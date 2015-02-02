@@ -65,24 +65,23 @@ class GeoIP {
 		"country" 		=> "United States",
 		"city" 			=> "New Haven",
 		"state" 		=> "CT",
-		"postal_code" 		=> "06510",
+		"postal_code"   => "06510",
 		"lat" 			=> 41.31,
 		"lon" 			=> -72.92,
 		"timezone" 		=> "America/New_York",
 		"continent"		=> "NA",
-		"default"       	=> true
+		"default"       => true
 	);
 
 	/**
 	 * Create a new GeoIP instance.
 	 *
      * @param  \Illuminate\Config\Repository  $config
-	 * @param  \Illuminate\Session\Store  $session
-	 * @return void
+	 * @param  \Illuminate\Session\Store      $session
 	 */
 	public function __construct(Repository $config, SessionStore $session)
 	{
-		$this->config = $config;
+		$this->config  = $config;
 		$this->session = $session;
 
 		$this->remote_ip = $this->default_location['ip'] = $this->getClientIP();
@@ -104,13 +103,13 @@ class GeoIP {
 	 * @param  string $ip Optional
 	 * @return array
 	 */
-	function getLocation( $ip = null )
+	function getLocation($ip = null )
 	{
 		// Get location data
-		$this->location = $this->find( $ip );
+		$this->location = $this->find($ip);
 
 		// Save user's location
-		if( $ip === null ) {
+		if($ip === null) {
 			$this->saveLocation();
 		}
 
@@ -123,10 +122,10 @@ class GeoIP {
 	 * @param  string $ip Optional
 	 * @return array
 	 */
-	private function find( $ip = null )
+	private function find($ip = null)
 	{
 		// Check Session
-		if ( $ip === null && $position = $this->session->get('geoip-location') )
+		if ($ip === null && $position = $this->session->get('geoip-location'))
 		{
 			// TODO: Remove default check on 2/28/14
 			if(isset($position['default']) && $position['ip'] === $this->remote_ip) {
@@ -135,12 +134,12 @@ class GeoIP {
 		}
 
 		// If IP not set, user remote IP
-		if ( $ip === null ) {
+		if ($ip === null) {
 			$ip = $this->remote_ip;
 		}
 
 		// Check if the ip is not local or empty
-		if( $this->checkIp( $ip ) ) {
+		if($this->checkIp($ip)) {
 
 			// Call default service
 			$service = 'locate_'.$this->config->get('geoip::service');
@@ -157,7 +156,7 @@ class GeoIP {
 	 * @param  string $ip
 	 * @return array
 	 */
-	private function locate_maxmind( $ip )
+	private function locate_maxmind($ip)
 	{
 		$settings = $this->config->get('geoip::maxmind');
 
@@ -183,12 +182,12 @@ class GeoIP {
 			"country" 		=> $record->country->name,
 			"city" 			=> $record->city->name,
 			"state" 		=> $record->mostSpecificSubdivision->isoCode,
-			"postal_code" 		=> $record->postal->code,
+			"postal_code"   => $record->postal->code,
 			"lat" 			=> $record->location->latitude,
 			"lon" 			=> $record->location->longitude,
 			"timezone" 		=> $record->location->timeZone,
 			"continent"		=> $record->continent->code,
-			"default"       	=> false
+			"default"       => false
 		);
 
 		unset($record);
@@ -221,7 +220,7 @@ class GeoIP {
 		else if(getenv('REMOTE_ADDR')) {
 			$ipaddress = getenv('REMOTE_ADDR');
 		}
-		else if( isset($_SERVER['REMOTE_ADDR']) ) {
+		else if(isset($_SERVER['REMOTE_ADDR'])) {
 			$ipaddress = $_SERVER['REMOTE_ADDR'];
 		}
 		else {
@@ -236,13 +235,14 @@ class GeoIP {
 	 *
 	 * @return bool
 	 */
-	private function checkIp( $ip )
+	private function checkIp($ip)
 	{
 		$longip = ip2long($ip);
 
-		if ( !empty($ip) ) {
+		if (!empty($ip)) {
 
-			foreach ($this->reserved_ips as $r) {
+			foreach ($this->reserved_ips as $r)
+			{
 				$min = ip2long($r[0]);
 				$max = ip2long($r[1]);
 
@@ -250,6 +250,7 @@ class GeoIP {
 					return false;
 				}
 			}
+
 			return true;
 		}
 
