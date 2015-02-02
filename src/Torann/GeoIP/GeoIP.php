@@ -3,6 +3,8 @@
 use GeoIp2\Database\Reader;
 use GeoIp2\WebService\Client;
 
+use GeoIp2\Exception\AddressNotFoundException;
+
 use Illuminate\Config\Repository;
 use Illuminate\Session\Store as SessionStore;
 
@@ -166,7 +168,14 @@ class GeoIP {
 			$maxmind = new Reader(app_path().'/database/maxmind/GeoLite2-City.mmdb');
 		}
 
-		$record = $maxmind->city($ip);
+		// Attempt to get location
+		try {
+			$record = $maxmind->city($ip);
+		}
+		catch(AddressNotFoundException $e)
+		{
+			return $this->default_location;
+		}
 
 		$location = array(
 			"ip"			=> $ip,
