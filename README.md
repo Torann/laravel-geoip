@@ -1,26 +1,27 @@
-# GeoIP for Laravel 4
+# GeoIP for Laravel 5
 
 [![Latest Stable Version](https://poser.pugx.org/torann/geoip/v/stable.png)](https://packagist.org/packages/torann/geoip) [![Total Downloads](https://poser.pugx.org/torann/geoip/downloads.png)](https://packagist.org/packages/torann/geoip)
 
-Determine the geographical location of website visitors based on their IP addresses.
+Determine the geographical location of website visitors based on their IP addresses. [Homepage](http://lyften.com/projects/laravel-geoip/)
 
 ----------
 
 ## Installation
 
-- [GeoIP for Laravel 4 on Packagist](https://packagist.org/packages/torann/geoip)
-- [GeoIP for Laravel 4 on GitHub](https://github.com/torann/laravel-hashids)
+- [GeoIP for Laravel 5 on Packagist](https://packagist.org/packages/torann/geoip)
+- [GeoIP for Laravel 5 on GitHub](https://github.com/torann/laravel-hashids)
+- [Laravel 4 Installation](https://github.com/Torann/laravel-4-geoip/tree/0.1.1)
 
 
 To get the latest version of GeoIP simply require it in your `composer.json` file.
 
 ~~~
-"torann/geoip": "0.1.*@dev"
+"torann/geoip": "0.2.*@dev"
 ~~~
 
 You'll then need to run `composer install` to download it and have the autoloader updated.
 
-Once GeoIP is installed you need to register the service provider with the application. Open up `app/config/app.php` and find the `providers` key.
+Once GeoIP is installed you need to register the service provider with the application. Open up `config/app.php` and find the `providers` key.
 
 ~~~php
 'providers' => array(
@@ -30,7 +31,7 @@ Once GeoIP is installed you need to register the service provider with the appli
 )
 ~~~
 
-GeoIP also ships with a facade which provides the static syntax for creating collections. You can register the facade in the `aliases` key of your `app/config/app.php` file.
+GeoIP also ships with a facade which provides the static syntax for creating collections. You can register the facade in the `aliases` key of your `config/app.php` file.
 
 ~~~php
 'aliases' => array(
@@ -40,11 +41,16 @@ GeoIP also ships with a facade which provides the static syntax for creating col
 )
 ~~~
 
-Create configuration file using artisan
+### Publish the configurations
+
+Run this on the command line from the root of your project:
 
 ~~~
-$ php artisan config:publish torann/geoip
+$ php artisan vendor:publish
 ~~~
+
+A configuration file will be publish to `config/geoip.php`
+
 
 ## Usage
 
@@ -59,7 +65,7 @@ $location = GeoIP::getLocation();
 Getting the location data for a given IP:
 
 ```php
-$location = GeoIP::getLocation( '232.223.11.11' );
+$location = GeoIP::getLocation('232.223.11.11');
 ```
 
 ### Example Data
@@ -80,15 +86,22 @@ array (
 );
 ```
 
-#### Note
+#### Default Location
 
-In the case that a location is not found the fallback location will be returned with the `default` parameter set to `true`. In a future release I'll make the default location customizable. For not it is New Haven, CT.
+In the case that a location is not found the fallback location will be returned with the `default` parameter set to `true`. To set your own default change it in the configurations `config/geoip.php`
 
 ## Services
 
-
 ### [MaxMind](http://www.maxmind.com)
 
-- **Database Service**: To use the database version of MaxMind services download the `GeoLite2-City.mmdb` from [http://dev.maxmind.com/geoip/geoip2/geolite2/](http://dev.maxmind.com/geoip/geoip2/geolite2/) and extract it to `/app/database/maxmind/`. And that's it.
+- **Database Service**: To use the database version of MaxMind services download the `GeoLite2-City.mmdb` from [http://dev.maxmind.com/geoip/geoip2/geolite2/](http://dev.maxmind.com/geoip/geoip2/geolite2/) and extract it to `database/maxmind/`. And that's it.
 
+## Change Log
+
+#### v0.2.0
+
+- Update to Laravel 5
+- Support IPv6
+- Log address not found exceptions
+- Supports a custom default location
 

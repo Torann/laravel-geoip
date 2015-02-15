@@ -3,6 +3,9 @@
 use GeoIp2\Database\Reader;
 use GeoIp2\WebService\Client;
 
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 use GeoIp2\Exception\AddressNotFoundException;
 
 use Illuminate\Config\Repository;
@@ -84,6 +87,13 @@ class GeoIP {
 		$this->config  = $config;
 		$this->session = $session;
 
+        // Set custom default location
+        $this->default_location = array_merge(
+            $this->default_location,
+            $this->config->get('geoip.default_location', array())
+        );
+
+        // Set IP
 		$this->remote_ip = $this->default_location['ip'] = $this->getClientIP();
 	}
 
@@ -121,6 +131,7 @@ class GeoIP {
 	 *
 	 * @param  string $ip Optional
 	 * @return array
+     * @throws \Exception
 	 */
 	private function find($ip = null)
 	{
@@ -136,10 +147,16 @@ class GeoIP {
 		}
 
 		// Check if the ip is not local or empty
-		if($this->checkIp($ip)) {
+		if($this->checkIp($ip))
+        {
+			// Get service name
+			$service = 'locate_'.$this->config->get('geoip.service');
 
-			// Call default service
-			$service = 'locate_'.$this->config->get('geoip::service');
+            // Check for valid service
+            if (! method_exists($this, $service))
+            {
+                throw new \Exception("GeoIP Service not support or setup.");
+            }
 
 			return $this->$service($ip);
 		}
@@ -155,41 +172,46 @@ class GeoIP {
 	 */
 	private function locate_maxmind($ip)
 	{
-		$settings = $this->config->get('geoip::maxmind');
+		$settings = $this->config->get('geoip.maxmind');
 
 		if($settings['type'] === 'web_service') {
 			$maxmind = new Client($settings['user_id'], $settings['license_key']);
 		}
 		else {
-			$maxmind = new Reader(app_path().'/database/maxmind/GeoLite2-City.mmdb');
+			$maxmind = new Reader(base_path().'/database/maxmind/GeoLite2-City.mmdb');
 		}
 
-		// Attempt to get location
-		try {
-			$record = $maxmind->city($ip);
-		}
-		catch(AddressNotFoundException $e)
-		{
-			return $this->default_location;
-		}
+        try {
+            $record = $maxmind->city($ip);
 
-		$location = array(
-			"ip"			=> $ip,
-			"isoCode" 		=> $record->country->isoCode,
-			"country" 		=> $record->country->name,
-			"city" 			=> $record->city->name,
-			"state" 		=> $record->mostSpecificSubdivision->isoCode,
-			"postal_code"   => $record->postal->code,
-			"lat" 			=> $record->location->latitude,
-			"lon" 			=> $record->location->longitude,
-			"timezone" 		=> $record->location->timeZone,
-			"continent"		=> $record->continent->code,
-			"default"       => false
-		);
+            $location = array(
+                "ip"			=> $ip,
+                "isoCode" 		=> $record->country->isoCode,
+                "country" 		=> $record->country->name,
+                "city" 			=> $record->city->name,
+                "state" 		=> $record->mostSpecificSubdivision->isoCode,
+                "postal_code"   => $record->postal->code,
+                "lat" 			=> $record->location->latitude,
+                "lon" 			=> $record->location->longitude,
+                "timezone" 		=> $record->location->timeZone,
+                "continent"		=> $record->continent->code,
+                "default"       => false
+            );
+        }
+        catch (AddressNotFoundException $e)
+        {
+            $location = $this->default_location;
 
-		unset($record);
+            $logFile = 'geoip';
 
-		return $location;
+            $log = new Logger($logFile);
+            $log->pushHandler(new StreamHandler(storage_path()."/logs/{$logFile}.log", Logger::ERROR));
+            $log->addError($e);
+        }
+
+        unset($record);
+
+        return $location;
 	}
 
 	/**
@@ -234,24 +256,33 @@ class GeoIP {
 	 */
 	private function checkIp($ip)
 	{
-		$longip = ip2long($ip);
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
+        {
+            $longip = ip2long($ip);
 
-		if (!empty($ip)) {
+            if (! empty($ip))
+            {
+                foreach ($this->reserved_ips as $r)
+                {
+                    $min = ip2long($r[0]);
+                    $max = ip2long($r[1]);
 
-			foreach ($this->reserved_ips as $r)
-			{
-				$min = ip2long($r[0]);
-				$max = ip2long($r[1]);
+                    if ($longip >= $min && $longip <= $max)
+                    {
+                        return false;
+                    }
+                }
 
-				if ($longip >= $min && $longip <= $max) {
-					return false;
-				}
-			}
+                return true;
+            }
+        }
 
-			return true;
-		}
+        else if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
+        {
+            return true;
+        }
 
-		return false;
+        return false;
 	}
 
 }

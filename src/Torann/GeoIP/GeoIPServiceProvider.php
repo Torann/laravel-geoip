@@ -18,10 +18,9 @@ class GeoIPServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('torann/geoip');
-
-		// Temp to use in closure.
-		$app = $this->app;
+        $this->publishes([
+            __DIR__.'/../../config/geoip.php' => config_path('geoip.php'),
+        ]);
 	}
 
 	/**
