@@ -9,8 +9,8 @@ Determine the geographical location of website visitors based on their IP addres
 ## Installation
 
 - [GeoIP for Laravel 5 on Packagist](https://packagist.org/packages/torann/geoip)
-- [GeoIP for Laravel 5 on GitHub](https://github.com/torann/laravel-hashids)
-- [Laravel 4 Installation](https://github.com/Torann/laravel-4-geoip/tree/0.1.1)
+- [GeoIP for Laravel 5 on GitHub](https://github.com/Torann/laravel-geoip)
+- [Laravel 4 Installation](https://github.com/Torann/laravel-geoip/tree/0.1.1)
 
 
 To get the latest version of GeoIP simply require it in your `composer.json` file.
