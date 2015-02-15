@@ -1,4 +1,4 @@
-# GeoIP for Laravel 4 - Alpha
+# GeoIP for Laravel 4
 
 [![Latest Stable Version](https://poser.pugx.org/torann/geoip/v/stable.png)](https://packagist.org/packages/torann/geoip) [![Total Downloads](https://poser.pugx.org/torann/geoip/downloads.png)](https://packagist.org/packages/torann/geoip)
 
@@ -8,12 +8,14 @@ Determine the geographical location of website visitors based on their IP addres
 
 ## Installation
 
-- [GeoIP for Laravel 4 on GitHub](https://github.com/torann/laravel-4-geoip)
+- [GeoIP for Laravel 4 on Packagist](https://packagist.org/packages/torann/geoip)
+- [GeoIP for Laravel 4 on GitHub](https://github.com/torann/laravel-hashids)
+
 
 To get the latest version of GeoIP simply require it in your `composer.json` file.
 
 ~~~
-"torann/geoip": "dev-master"
+"torann/geoip": "0.1.*@dev"
 ~~~
 
 You'll then need to run `composer install` to download it and have the autoloader updated.
