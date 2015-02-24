@@ -18,9 +18,13 @@ class GeoIPServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-        $this->publishes([
-            __DIR__.'/../../config/geoip.php' => config_path('geoip.php'),
-        ]);
+		$this->publishes([
+			__DIR__.'/../../config/geoip.php' => config_path('geoip.php'),
+		], 'config');
+		
+		$this->publishes([
+			__DIR__.'/../../migrations/' => base_path('/database/migrations'),
+		], 'migrations');
 	}
 
 	/**
@@ -33,7 +37,7 @@ class GeoIPServiceProvider extends ServiceProvider {
 		// Register providers.
 		$this->app['geoip'] = $this->app->share(function($app)
 		{
-			return new GeoIP($app['config'], $app["session.store"]);
+			return new GeoIP($app['config'], $app["session.store"], $app['db']);
 		});
 	}
 
