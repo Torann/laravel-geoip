@@ -181,11 +181,11 @@ class GeoIP {
 			// Get service name
 			$service = 'locate_'.$this->config->get('geoip.service');
 			
-		   // Check for valid service
-		   if (! method_exists($this, $service))
-		   {
+			// Check for valid service
+			if (! method_exists($this, $service))
+			{
 				throw new \Exception("GeoIP Service not supported or setup: " . $service);
-		   }
+			}
 			
 			return $this->$service($ip);
 		}
@@ -211,9 +211,9 @@ class GeoIP {
 		}
 		
 		try {
-		   $record = $maxmind->city($ip);
-		
-		   $location = GeoIPRecord::create([
+			$record = $maxmind->city($ip);
+			
+			$location = GeoIPRecord::create([
 				"ip"          => $ip,
 				"isoCode"     => $record->country->isoCode,
 				"country"     => $record->country->name,
@@ -225,17 +225,17 @@ class GeoIP {
 				"timezone"    => $record->location->timeZone,
 				"continent"   => $record->continent->code,
 				"default"     => false
-		   ]);
+			]);
 		}
 		catch (AddressNotFoundException $e)
 		{
-		   $location = GeoIPRecord::create($this->default_location);
+			$location = GeoIPRecord::create($this->default_location);
 			
-		   $logFile = 'geoip';
+			$logFile = 'geoip';
 			
-		   $log = new Logger($logFile);
-		   $log->pushHandler(new StreamHandler(storage_path()."/logs/{$logFile}.log", Logger::ERROR));
-		   $log->addError($e);
+			$log = new Logger($logFile);
+			$log->pushHandler(new StreamHandler(storage_path()."/logs/{$logFile}.log", Logger::ERROR));
+			$log->addError($e);
 		}
 		
 		unset($record);
