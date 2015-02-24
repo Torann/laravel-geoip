@@ -9,7 +9,7 @@ class GeoIPRecord extends Model {
 	 *
 	 * @var string
 	 */
-	protected $table = 'geoiprecords';
+	protected $table = 'geoip_records';
 	
 	/**
 	 * The attributes that are hidden from the return value.
