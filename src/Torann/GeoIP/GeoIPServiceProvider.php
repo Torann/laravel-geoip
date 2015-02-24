@@ -20,11 +20,8 @@ class GeoIPServiceProvider extends ServiceProvider {
 	{
 		$this->publishes([
 			__DIR__.'/../../config/geoip.php' => config_path('geoip.php'),
-		], 'config');
-		
-		$this->publishes([
 			__DIR__.'/../../migrations/' => base_path('/database/migrations'),
-		], 'migrations');
+		]);
 	}
 
 	/**
