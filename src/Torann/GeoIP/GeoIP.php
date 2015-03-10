@@ -215,7 +215,7 @@ class GeoIP {
 			
 			$location = GeoIPRecord::create([
 				"ip"          => $ip,
-				"isoCode"     => $record->country->isoCode,
+				"iso_code"    => $record->country->isoCode,
 				"country"     => $record->country->name,
 				"city"        => $record->city->name,
 				"state"       => $record->mostSpecificSubdivision->isoCode,
