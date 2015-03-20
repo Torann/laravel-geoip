@@ -178,7 +178,7 @@ class GeoIP {
 			$maxmind = new Client($settings['user_id'], $settings['license_key']);
 		}
 		else {
-			$maxmind = new Reader(base_path().'/database/maxmind/GeoLite2-City.mmdb');
+			$maxmind = new Reader(base_path(). $settings['database']);
 		}
 
         try {
