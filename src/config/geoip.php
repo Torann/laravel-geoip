@@ -25,7 +25,8 @@ return array(
     'maxmind' => array(
         'type'        => 'database', // database or web_service
         'user_id'     => env('GEOIP_USER_ID'),
-        'license_key' => env('GEOIP_LICENSE_KEY')
+        'license_key' => env('GEOIP_LICENSE_KEY'),
+        'database'    => env('MAXMIND_DB', '/database/maxmind/GeoLite2-City.mmdb')
     ),
 
     /*
