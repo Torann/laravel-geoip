@@ -174,8 +174,14 @@ class GeoIP {
 		{
 			// Check the database
 			$record = GeoIPRecord::where('ip', '=', $ip)->take(1)->get()->first();
-			if( $record != null && strtotime($record->updated_at) > time() - 30 * 24 * 60 * 60 ) {
-				return $record;
+			if( $record != null ) {
+				if( strtotime($record->updated_at) > time() - 30 * 24 * 60 * 60 ) {
+					// Return cached record
+					return $record;
+				} else {
+					// Record too old... destroy it
+					$record->delete();
+				}
 			}
 			
 			// Get service name
