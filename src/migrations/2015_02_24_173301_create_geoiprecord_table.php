@@ -16,15 +16,15 @@ class CreateGeoiprecordTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('ip', 15)->unique();
-			$table->string('isoCode', 15);
-			$table->string('country', 30);
-			$table->string('city', 30);
-			$table->string('state', 30);
-			$table->string('postal_code', 15);
-			$table->double('lat');
-			$table->double('lon');
-			$table->string('timezone', 30);
-			$table->string('continent', 30);
+			$table->string('isoCode', 15)->nullable();
+			$table->string('country', 30)->nullable();
+			$table->string('city', 30)->nullable();
+			$table->string('state', 30)->nullable();
+			$table->string('postal_code', 15)->nullable();
+			$table->double('lat')->nullable();
+			$table->double('lon')->nullable();
+			$table->string('timezone', 30)->nullable();
+			$table->string('continent', 30)->nullable();
 			$table->boolean('default');
 			$table->timestamps();
 		});
