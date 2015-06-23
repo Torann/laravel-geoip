@@ -30,7 +30,7 @@ class GeoIPUpdater
 	 */
 	public function update()
 	{
-		if (array_get($this->config, 'geoip.database_path', false)) {
+		if ($this->config->get('geoip.maxmind.database_path', false)) {
 			return $this->updateMaxMindDatabase();
 		}
 
@@ -45,7 +45,7 @@ class GeoIPUpdater
 	protected function updateMaxMindDatabase()
 	{
 		$maxMindDatabaseUrl = 'http://geolite.maxmind.com/download/geoip/database/';
-		$databasePath = array_get($this->config, 'geoip.database_path', storage_path('geoip.mmdb'));
+		$databasePath = $this->config->get('geoip.maxmind.database_path');
 
 		$client = new Client(['base_uri' => $maxMindDatabaseUrl]);
 		$response = $client->get('GeoLite2-City.mmdb.gz');
