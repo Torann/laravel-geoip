@@ -1,7 +1,7 @@
 <?php namespace Torann\GeoIP\Console;
 
+use Illuminate\Config\Repository;
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Config\Repository;
 use Torann\GeoIP\GeoIPUpdater;
 
 class UpdateCommand extends Command
