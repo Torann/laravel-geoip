@@ -51,6 +51,11 @@ $ php artisan vendor:publish
 
 A configuration file will be publish to `config/geoip.php`
 
+Update max mind cities database
+
+~~~
+$ php artisan geoip:update
+~~~
 
 ## Usage
 
