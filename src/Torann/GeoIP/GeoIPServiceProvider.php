@@ -39,7 +39,7 @@ class GeoIPServiceProvider extends ServiceProvider {
 
 		$this->app['command.geoip.update'] = $this->app->share(function ($app)
 		{
-			return new UpdateCommand(config('geoip'));
+			return new UpdateCommand($app['config']);
 		});
 		$this->commands(['command.geoip.update']);
 	}

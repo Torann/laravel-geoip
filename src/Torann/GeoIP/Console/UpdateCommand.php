@@ -1,6 +1,7 @@
 <?php namespace Torann\GeoIP\Console;
 
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Config\Repository;
 use Torann\GeoIP\GeoIPUpdater;
 
 class UpdateCommand extends Command
@@ -29,7 +30,7 @@ class UpdateCommand extends Command
 	 *
 	 * @param \Illuminate\Config\Repository $config
 	 */
-	public function __construct(array $config)
+	public function __construct(Repository $config)
 	{
 		parent::__construct();
 

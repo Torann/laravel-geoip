@@ -1,6 +1,7 @@
 <?php namespace Torann\GeoIP;
 
 use GuzzleHttp\Client as Client;
+use Illuminate\Config\Repository;
 
 class GeoIPUpdater
 {
@@ -17,7 +18,7 @@ class GeoIPUpdater
 	/**
 	 * @param array $config
 	 */
-	public function __construct(array $config)
+	public function __construct(Repository $config)
 	{
 		$this->config = $config;
 	}
