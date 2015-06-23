@@ -1,6 +1,7 @@
 <?php namespace Torann\GeoIP;
 
 use Illuminate\Support\ServiceProvider;
+use Torann\GeoIP\Console\UpdateCommand;
 
 class GeoIPServiceProvider extends ServiceProvider {
 
@@ -18,9 +19,9 @@ class GeoIPServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-        $this->publishes([
-            __DIR__.'/../../config/geoip.php' => config_path('geoip.php'),
-        ]);
+		$this->publishes([
+			__DIR__.'/../../config/geoip.php' => config_path('geoip.php'),
+		]);
 	}
 
 	/**
@@ -35,6 +36,12 @@ class GeoIPServiceProvider extends ServiceProvider {
 		{
 			return new GeoIP($app['config'], $app["session.store"]);
 		});
+
+		$this->app['command.geoip.update'] = $this->app->share(function ($app)
+		{
+			return new UpdateCommand(config('geoip'));
+		});
+		$this->commands(['command.geoip.update']);
 	}
 
 	/**
@@ -44,7 +51,7 @@ class GeoIPServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array('geoip');
+		return array('geoip', 'command.geoip.update');
 	}
 
 }
