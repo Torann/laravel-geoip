@@ -175,7 +175,7 @@ class GeoIP {
 			$maxmind = new Client($settings['user_id'], $settings['license_key']);
 		}
 		else {
-			$maxmind = new Reader($this->config->get('geoip.database_path'));
+			$maxmind = new Reader($settings['database_path']);
 		}
 
 		try {
