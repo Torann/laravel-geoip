@@ -51,11 +51,13 @@ $ php artisan vendor:publish
 
 A configuration file will be publish to `config/geoip.php`
 
-Update max mind cities database
+Update max mind cities database:
 
 ~~~
 $ php artisan geoip:update
 ~~~
+
+**Database Service**: To use the database version of [MaxMind](http://www.maxmind.com) services download the `GeoLite2-City.mmdb` from [http://dev.maxmind.com/geoip/geoip2/geolite2/](http://dev.maxmind.com/geoip/geoip2/geolite2/) and extract it to `storage/app/geoip.mmdb`. And that's it.
 
 ## Usage
 
@@ -94,12 +96,6 @@ array (
 #### Default Location
 
 In the case that a location is not found the fallback location will be returned with the `default` parameter set to `true`. To set your own default change it in the configurations `config/geoip.php`
-
-## Services
-
-### [MaxMind](http://www.maxmind.com)
-
-- **Database Service**: To use the database version of MaxMind services download the `GeoLite2-City.mmdb` from [http://dev.maxmind.com/geoip/geoip2/geolite2/](http://dev.maxmind.com/geoip/geoip2/geolite2/) and extract it to `database/maxmind/`. And that's it.
 
 ## Change Log
 

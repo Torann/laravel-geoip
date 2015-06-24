@@ -25,6 +25,7 @@ class GeoIPUpdaterTest extends PHPUnit_Framework_TestCase
 				'maxmind' => [
 					'type' => 'database',
 					'database_path' => $database,
+					'update_url' => 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz',
 				],
 			],
 		]);

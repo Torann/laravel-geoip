@@ -44,11 +44,11 @@ class GeoIPUpdater
 	 */
 	protected function updateMaxMindDatabase()
 	{
-		$maxMindDatabaseUrl = 'http://geolite.maxmind.com/download/geoip/database/';
+		$maxMindDatabaseUrl = $this->config->get('geoip.maxmind.update_url');
 		$databasePath = $this->config->get('geoip.maxmind.database_path');
 
-		$client = new Client(['base_uri' => $maxMindDatabaseUrl]);
-		$response = $client->get('GeoLite2-City.mmdb.gz');
+		$client = new Client();
+		$response = $client->get($maxMindDatabaseUrl);
 		$file = $response->getBody();
 
 		@file_put_contents($databasePath, gzdecode($file));
