@@ -18,7 +18,7 @@ class GeoIPUpdaterTest extends PHPUnit_Framework_TestCase
 
 	public function test_max_mind_updater()
 	{
-		$database = __DIR__.'/data/GeoLite2-City.mmdb';
+		$database = __DIR__ . '/data/GeoLite2-City.mmdb';
 		$config = new Repository([
 			'geoip' => [
 				'service'  => 'maxmind',
