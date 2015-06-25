@@ -113,7 +113,7 @@ class GeoIP {
 	 * @param  string $ip Optional
 	 * @return array
 	 */
-	function getLocation($ip = null)
+	public function getLocation($ip = null)
 	{
 		// Get location data
 		$this->location = $this->find($ip);
