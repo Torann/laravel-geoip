@@ -161,6 +161,8 @@ class GeoIP {
 		return $this->default_location;
 	}
 
+	private $maxmind;
+
 	/**
 	 * Maxmind Service.
 	 *
@@ -171,15 +173,17 @@ class GeoIP {
 	{
 		$settings = $this->config->get('geoip.maxmind');
 
-		if ($settings['type'] === 'web_service') {
-			$maxmind = new Client($settings['user_id'], $settings['license_key']);
-		}
-		else {
-			$maxmind = new Reader($settings['database_path']);
+		if (empty($this->maxmind)) {
+			if ($settings['type'] === 'web_service') {
+				$this->maxmind = new Client($settings['user_id'], $settings['license_key']);
+			}
+			else {
+				$this->maxmind = new Reader($settings['database_path']);
+			}
 		}
 
 		try {
-			$record = $maxmind->city($ip);
+			$record = $this->maxmind->city($ip);
 
 			$location = array(
 				"ip"			=> $ip,
