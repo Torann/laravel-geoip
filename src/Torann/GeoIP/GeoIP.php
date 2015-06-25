@@ -20,12 +20,12 @@ class GeoIP {
 	 */
 	protected $session;
 
-    /**
-     * Illuminate config repository instance.
-     *
-     * @var \Illuminate\Config\Repository
-     */
-    protected $config;
+	/**
+	 * Illuminate config repository instance.
+	 *
+	 * @var \Illuminate\Config\Repository
+	 */
+	protected $config;
 
 	/**
 	 * Remote Machine IP address.
@@ -54,7 +54,7 @@ class GeoIP {
 		array('172.16.0.0','172.31.255.255'),
 		array('192.0.2.0','192.0.2.255'),
 		array('192.168.0.0','192.168.255.255'),
-		array('255.255.255.0','255.255.255.255')
+		array('255.255.255.0','255.255.255.255'),
 	);
 
 	/**
@@ -73,13 +73,13 @@ class GeoIP {
 		"lon" 			=> -72.92,
 		"timezone" 		=> "America/New_York",
 		"continent"		=> "NA",
-		"default"       => true
+		"default"       => true,
 	);
 
 	/**
 	 * Create a new GeoIP instance.
 	 *
-     * @param  \Illuminate\Config\Repository  $config
+	 * @param  \Illuminate\Config\Repository  $config
 	 * @param  \Illuminate\Session\Store      $session
 	 */
 	public function __construct(Repository $config, SessionStore $session)
@@ -87,13 +87,13 @@ class GeoIP {
 		$this->config  = $config;
 		$this->session = $session;
 
-        // Set custom default location
-        $this->default_location = array_merge(
-            $this->default_location,
-            $this->config->get('geoip.default_location', array())
-        );
+		// Set custom default location
+		$this->default_location = array_merge(
+			$this->default_location,
+			$this->config->get('geoip.default_location', array())
+		);
 
-        // Set IP
+		// Set IP
 		$this->remote_ip = $this->default_location['ip'] = $this->getClientIP();
 	}
 
@@ -103,7 +103,7 @@ class GeoIP {
 	 * @return void
 	 */
 	function saveLocation()
-    {
+	{
 		$this->session->set('geoip-location', $this->location);
 	}
 
@@ -113,13 +113,13 @@ class GeoIP {
 	 * @param  string $ip Optional
 	 * @return array
 	 */
-	function getLocation($ip = null )
+	function getLocation($ip = null)
 	{
 		// Get location data
 		$this->location = $this->find($ip);
 
 		// Save user's location
-		if($ip === null) {
+		if ($ip === null) {
 			$this->saveLocation();
 		}
 
@@ -131,13 +131,12 @@ class GeoIP {
 	 *
 	 * @param  string $ip Optional
 	 * @return array
-     * @throws \Exception
+	 * @throws \Exception
 	 */
 	private function find($ip = null)
 	{
 		// Check Session
-		if ($ip === null && $position = $this->session->get('geoip-location'))
-		{
+		if ($ip === null && $position = $this->session->get('geoip-location')) {
 			return $position;
 		}
 
@@ -147,22 +146,22 @@ class GeoIP {
 		}
 
 		// Check if the ip is not local or empty
-		if($this->checkIp($ip))
-        {
+		if ($this->checkIp($ip)) {
 			// Get service name
 			$service = 'locate_'.$this->config->get('geoip.service');
 
-            // Check for valid service
-            if (! method_exists($this, $service))
-            {
-                throw new \Exception("GeoIP Service not support or setup.");
-            }
+			// Check for valid service
+			if (! method_exists($this, $service)) {
+				throw new \Exception("GeoIP Service not support or setup.");
+			}
 
 			return $this->$service($ip);
 		}
 
 		return $this->default_location;
 	}
+
+	private $maxmind;
 
 	/**
 	 * Maxmind Service.
@@ -174,44 +173,46 @@ class GeoIP {
 	{
 		$settings = $this->config->get('geoip.maxmind');
 
-		if($settings['type'] === 'web_service') {
-			$maxmind = new Client($settings['user_id'], $settings['license_key']);
+		if (empty($this->maxmind)) {
+			if ($settings['type'] === 'web_service') {
+				$this->maxmind = new Client($settings['user_id'], $settings['license_key']);
+			}
+			else {
+				$this->maxmind = new Reader($settings['database_path']);
+			}
 		}
-		else {
-			$maxmind = new Reader(base_path().'/database/maxmind/GeoLite2-City.mmdb');
+
+		try {
+			$record = $this->maxmind->city($ip);
+
+			$location = array(
+				"ip"			=> $ip,
+				"isoCode" 		=> $record->country->isoCode,
+				"country" 		=> $record->country->name,
+				"city" 			=> $record->city->name,
+				"state" 		=> $record->mostSpecificSubdivision->isoCode,
+				"postal_code"   => $record->postal->code,
+				"lat" 			=> $record->location->latitude,
+				"lon" 			=> $record->location->longitude,
+				"timezone" 		=> $record->location->timeZone,
+				"continent"		=> $record->continent->code,
+				"default"       => false,
+			);
+		}
+		catch (AddressNotFoundException $e)
+		{
+			$location = $this->default_location;
+
+			$logFile = 'geoip';
+
+			$log = new Logger($logFile);
+			$log->pushHandler(new StreamHandler(storage_path("logs/{$logFile}.log"), Logger::ERROR));
+			$log->addError($e);
 		}
 
-        try {
-            $record = $maxmind->city($ip);
+		unset($record);
 
-            $location = array(
-                "ip"			=> $ip,
-                "isoCode" 		=> $record->country->isoCode,
-                "country" 		=> $record->country->name,
-                "city" 			=> $record->city->name,
-                "state" 		=> $record->mostSpecificSubdivision->isoCode,
-                "postal_code"   => $record->postal->code,
-                "lat" 			=> $record->location->latitude,
-                "lon" 			=> $record->location->longitude,
-                "timezone" 		=> $record->location->timeZone,
-                "continent"		=> $record->continent->code,
-                "default"       => false
-            );
-        }
-        catch (AddressNotFoundException $e)
-        {
-            $location = $this->default_location;
-
-            $logFile = 'geoip';
-
-            $log = new Logger($logFile);
-            $log->pushHandler(new StreamHandler(storage_path()."/logs/{$logFile}.log", Logger::ERROR));
-            $log->addError($e);
-        }
-
-        unset($record);
-
-        return $location;
+		return $location;
 	}
 
 	/**
@@ -224,22 +225,22 @@ class GeoIP {
 		if (getenv('HTTP_CLIENT_IP')) {
 			$ipaddress = getenv('HTTP_CLIENT_IP');
 		}
-		else if(getenv('HTTP_X_FORWARDED_FOR')) {
+		else if (getenv('HTTP_X_FORWARDED_FOR')) {
 			$ipaddress = getenv('HTTP_X_FORWARDED_FOR');
 		}
-		else if(getenv('HTTP_X_FORWARDED')) {
+		else if (getenv('HTTP_X_FORWARDED')) {
 			$ipaddress = getenv('HTTP_X_FORWARDED');
 		}
-		else if(getenv('HTTP_FORWARDED_FOR')) {
+		else if (getenv('HTTP_FORWARDED_FOR')) {
 			$ipaddress = getenv('HTTP_FORWARDED_FOR');
 		}
-		else if(getenv('HTTP_FORWARDED')) {
+		else if (getenv('HTTP_FORWARDED')) {
 			$ipaddress = getenv('HTTP_FORWARDED');
 		}
-		else if(getenv('REMOTE_ADDR')) {
+		else if (getenv('REMOTE_ADDR')) {
 			$ipaddress = getenv('REMOTE_ADDR');
 		}
-		else if(isset($_SERVER['REMOTE_ADDR'])) {
+		else if (isset($_SERVER['REMOTE_ADDR'])) {
 			$ipaddress = $_SERVER['REMOTE_ADDR'];
 		}
 		else {
@@ -256,33 +257,26 @@ class GeoIP {
 	 */
 	private function checkIp($ip)
 	{
-        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
-        {
-            $longip = ip2long($ip);
+		if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+			$longip = ip2long($ip);
 
-            if (! empty($ip))
-            {
-                foreach ($this->reserved_ips as $r)
-                {
-                    $min = ip2long($r[0]);
-                    $max = ip2long($r[1]);
+			if (! empty($ip)) {
+				foreach ($this->reserved_ips as $r) {
+					$min = ip2long($r[0]);
+					$max = ip2long($r[1]);
 
-                    if ($longip >= $min && $longip <= $max)
-                    {
-                        return false;
-                    }
-                }
+					if ($longip >= $min && $longip <= $max) {
+						return false;
+					}
+				}
 
-                return true;
-            }
-        }
+				return true;
+			}
+		} else if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+			return true;
+		}
 
-        else if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
-        {
-            return true;
-        }
-
-        return false;
+		return false;
 	}
 
 }
