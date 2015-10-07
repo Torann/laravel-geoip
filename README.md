@@ -25,7 +25,7 @@ Once GeoIP is installed you need to register the service provider with the appli
 ~~~php
 'providers' => array(
 
-    'Torann\GeoIP\GeoIPServiceProvider',
+    Torann\GeoIP\GeoIPServiceProvider::class,
 
 )
 ~~~
@@ -35,7 +35,7 @@ GeoIP also ships with a facade which provides the static syntax for creating col
 ~~~php
 'aliases' => array(
 
-    'GeoIP' => 'Torann\GeoIP\GeoIPFacade',
+    'GeoIP' => Torann\GeoIP\GeoIPFacade::class,
 
 )
 ~~~
