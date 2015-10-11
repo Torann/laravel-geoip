@@ -24,7 +24,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Torann\\GeoIP\\": "src/Torann/GeoIP"
+            "Torann\\GeoIP\\": "src/"
         }
     },
     "extra": {

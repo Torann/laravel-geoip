@@ -1,4 +1,6 @@
-<?php namespace Torann\GeoIP;
+<?php
+
+namespace Torann\GeoIP;
 
 use GuzzleHttp\Client as Client;
 use Illuminate\Config\Repository;
