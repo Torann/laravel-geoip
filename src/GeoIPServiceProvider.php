@@ -1,4 +1,6 @@
-<?php namespace Torann\GeoIP;
+<?php
+
+namespace Torann\GeoIP;
 
 use Illuminate\Support\ServiceProvider;
 use Torann\GeoIP\Console\UpdateCommand;
@@ -20,7 +22,7 @@ class GeoIPServiceProvider extends ServiceProvider {
 	public function boot()
 	{
 		$this->publishes([
-			__DIR__.'/../../config/geoip.php' => config_path('geoip.php'),
+			__DIR__.'/config/geoip.php' => config_path('geoip.php'),
 		]);
 	}
 

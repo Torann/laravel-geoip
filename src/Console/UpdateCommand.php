@@ -1,4 +1,6 @@
-<?php namespace Torann\GeoIP\Console;
+<?php
+
+namespace Torann\GeoIP\Console;
 
 use Illuminate\Config\Repository;
 use Illuminate\Console\Command;
