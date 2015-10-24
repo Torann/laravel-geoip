@@ -233,8 +233,12 @@ class GeoIP {
 			];
 
 			if ($settings['key']) {
-				$base['base_uri'] = ($settings['secure'] ? 'https' : 'http') . '://pro.ip-api.com/';
-				$base['query']['key'] = $settings['key'];
+				$base = array_merge_recursive($base, [
+					'base_uri' => ($settings['secure'] ? 'https' : 'http') . '://pro.ip-api.com/',
+					'query' => [
+						'key' => $settings['key']
+					]
+				]);
 			}
 
 			$this->guzzle = new GuzzleClient($base);
