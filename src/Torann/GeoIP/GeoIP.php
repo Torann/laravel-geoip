@@ -223,23 +223,21 @@ class GeoIP {
 
 		if (empty($this->guzzle)) {
 			$base = [
+				'base_uri' => 'http://ip-api.com/',
 				'headers' => [
 					'User-Agent' => 'Laravel-GeoIP'
+				],
+				'query' => [
+					'fields' => 49663
 				]
 			];
 
 			if ($settings['pro']) {
-				$this->guzzle = new GuzzleClient(array_merge($base, [
-					'base_uri' => ($settings['https'] ? 'https' : 'http') . '://pro.ip-api.com/',
-					'query' => [
-						'key' => $settings['key']
-					]
-				]));
-			} else {
-				$this->guzzle = new GuzzleClient(array_merge($base, [
-					'base_uri' => 'http://ip-api.com/'
-				]));
+				$base['base_uri'] = ($settings['https'] ? 'https' : 'http') . '://pro.ip-api.com/';
+				$base['query']['key'] = $settings['key'];
 			}
+
+			$this->guzzle = new GuzzleClient($base);
 		}
 
 		try {
