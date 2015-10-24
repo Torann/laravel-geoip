@@ -3,6 +3,8 @@
 use GeoIp2\Database\Reader;
 use GeoIp2\WebService\Client;
 
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Client as GuzzleClient;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
@@ -211,6 +213,68 @@ class GeoIP {
 		}
 
 		unset($record);
+
+		return $location;
+	}
+
+	public function locate_ipapi($ip)
+	{
+		$settings = $this->config->get('geoip.ipapi');
+
+		if (empty($this->guzzle)) {
+			$base = [
+				'headers' => [
+					'User-Agent' => 'Laravel-GeoIP'
+				]
+			];
+
+			if ($settings['pro']) {
+				$this->guzzle = new GuzzleClient(array_merge($base, [
+					'base_uri' => ($settings['https'] ? 'https' : 'http') . '://pro.ip-api.com/',
+					'query' => [
+						'key' => $settings['key']
+					]
+				]));
+			} else {
+				$this->guzzle = new GuzzleClient(array_merge($base, [
+					'base_uri' => 'http://ip-api.com/'
+				]));
+			}
+		}
+
+		try {
+			$data = $this->guzzle->get('/json/' . $ip);
+
+			$json = json_decode($data->getBody());
+
+			if ($json->status !== 'success') {
+				throw new \Exception('Request failed');
+			}
+
+			$location = array(
+				"ip"			=> $ip,
+				"isoCode" 		=> $json->countryCode,
+				"country" 		=> $json->country,
+				"city" 			=> $json->city,
+				"state" 		=> $json->region,
+				"postal_code"   => $json->zip,
+				"lat" 			=> $json->lat,
+				"lon" 			=> $json->lon,
+				"timezone" 		=> $json->timezone,
+				"continent"		=> 'Unknown',
+				"default"       => false,
+			);
+		}
+		catch (\Exception $e)
+		{
+			$location = $this->default_location;
+
+			$logFile = 'geoip';
+
+			$log = new Logger($logFile);
+			$log->pushHandler(new StreamHandler(storage_path("logs/{$logFile}.log"), Logger::ERROR));
+			$log->addError($e);
+		}
 
 		return $location;
 	}
