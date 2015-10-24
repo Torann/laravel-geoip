@@ -217,6 +217,12 @@ class GeoIP {
 		return $location;
 	}
 
+	/**
+	 * IP-API.com Service.
+	 *
+	 * @param  string $ip
+	 * @return array
+	 */
 	public function locate_ipapi($ip)
 	{
 		$settings = $this->config->get('geoip.ipapi');
@@ -246,7 +252,7 @@ class GeoIP {
 			$json = json_decode($data->getBody());
 
 			if ($json->status !== 'success') {
-				throw new \Exception('Request failed');
+				throw new \Exception('Request failed (' . $json->message . ')');
 			}
 
 			$location = array(
