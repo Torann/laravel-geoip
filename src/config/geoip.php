@@ -11,7 +11,7 @@ return array(
 	|
 	*/
 
-	'service' => 'maxmind',
+	'service' => env('GEOIP_SERVICE', 'maxmind'),
 
 	/*
 	|--------------------------------------------------------------------------
