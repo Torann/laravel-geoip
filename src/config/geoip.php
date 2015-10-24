@@ -41,9 +41,8 @@ return array(
 	*/
 	'ipapi' => array(
 		// Only for "pro"
-		'pro'            => env('GEOIP_IPAPI_PRO', false),
-		'key'            => env('GEOIP_IPAPI_KEY', ''),
-		'https'          => env('GEOIP_IPAPI_HTTPS', true),
+		'key'             => env('GEOIP_IPAPI_KEY'),
+		'secure'          => env('GEOIP_IPAPI_SECURE', true),
 	),
 
 	/*
