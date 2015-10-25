@@ -50,18 +50,18 @@ class ContinentUpdateCommand extends Command
 
 		$res = $client->get('http://dev.maxmind.com/static/csv/codes/country_continent.csv');
 
-		$lines = collect(explode("\n", $res->getBody()));
+		$lines = explode("\n", $res->getBody());
 
-		$csv = $lines->map(function($line) {
-			return str_getcsv($line);
-		});
+        array_shift($lines);
 
-		// Pop off the headers
-		$csv->pop();
+        $output = [];
 
-        // Key by country code
-        $csv = $csv->keyBy('0');
+        foreach ($lines as $line) {
+            list ($countryCode, $continent) = str_getcsv($line);
 
-		file_put_contents($this->outputFile, $csv->toJson());
+            $output[$countryCode] = $continent;
+        }
+
+		file_put_contents($this->outputFile, json_encode($output));
 	}
 }
