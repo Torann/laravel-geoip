@@ -3,7 +3,6 @@
 use GeoIp2\Database\Reader;
 use GeoIp2\WebService\Client;
 
-use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Client as GuzzleClient;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
@@ -48,23 +47,23 @@ class GeoIP {
 	 *
 	 * @var array
 	 */
-	protected $reserved_ips = array (
-		array('0.0.0.0','2.255.255.255'),
-		array('10.0.0.0','10.255.255.255'),
-		array('127.0.0.0','127.255.255.255'),
-		array('169.254.0.0','169.254.255.255'),
-		array('172.16.0.0','172.31.255.255'),
-		array('192.0.2.0','192.0.2.255'),
-		array('192.168.0.0','192.168.255.255'),
-		array('255.255.255.0','255.255.255.255'),
-	);
+	protected $reserved_ips = [
+		['0.0.0.0','2.255.255.255'],
+		['10.0.0.0','10.255.255.255'],
+		['127.0.0.0','127.255.255.255'],
+		['169.254.0.0','169.254.255.255'],
+		['172.16.0.0','172.31.255.255'],
+		['192.0.2.0','192.0.2.255'],
+		['192.168.0.0','192.168.255.255'],
+		['255.255.255.0','255.255.255.255'],
+	];
 
 	/**
 	 * Default Location data.
 	 *
 	 * @var array
 	 */
-	protected $default_location = array (
+	protected $default_location = [
 		"ip" 			=> "127.0.0.0",
 		"isoCode" 		=> "US",
 		"country" 		=> "United States",
@@ -76,7 +75,7 @@ class GeoIP {
 		"timezone" 		=> "America/New_York",
 		"continent"		=> "NA",
 		"default"       => true,
-	);
+	];
 
 	/**
 	 * Create a new GeoIP instance.
@@ -92,7 +91,7 @@ class GeoIP {
 		// Set custom default location
 		$this->default_location = array_merge(
 			$this->default_location,
-			$this->config->get('geoip.default_location', array())
+			$this->config->get('geoip.default_location', [])
 		);
 
 		// Set IP
@@ -187,7 +186,7 @@ class GeoIP {
 		try {
 			$record = $this->maxmind->city($ip);
 
-			$location = array(
+			$location = [
 				"ip"			=> $ip,
 				"isoCode" 		=> $record->country->isoCode,
 				"country" 		=> $record->country->name,
@@ -199,7 +198,7 @@ class GeoIP {
 				"timezone" 		=> $record->location->timeZone,
 				"continent"		=> $record->continent->code,
 				"default"       => false,
-			);
+			];
 		}
 		catch (AddressNotFoundException $e)
 		{
@@ -265,7 +264,7 @@ class GeoIP {
 				throw new \Exception('Request failed (' . $json->message . ')');
 			}
 
-			$location = array(
+			$location = [
 				"ip"			=> $ip,
 				"isoCode" 		=> $json->countryCode,
 				"country" 		=> $json->country,
@@ -277,7 +276,7 @@ class GeoIP {
 				"timezone" 		=> $json->timezone,
 				"continent"		=> $this->continents ? object_get($this->continents, $json->countryCode, 'Unknown') : 'Unknown',
 				"default"       => false,
-			);
+			];
 		}
 		catch (\Exception $e)
 		{

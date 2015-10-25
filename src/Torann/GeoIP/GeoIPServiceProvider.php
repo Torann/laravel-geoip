@@ -57,7 +57,7 @@ class GeoIPServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array('geoip', 'command.geoip.update');
+		return array('geoip', 'command.geoip.update', 'command.geoip.update_continents');
 	}
 
 }

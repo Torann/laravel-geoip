@@ -10,12 +10,13 @@ Determine the geographical location of website visitors based on their IP addres
 
 - [GeoIP for Laravel 5 on Packagist](https://packagist.org/packages/torann/geoip)
 - [GeoIP for Laravel 5 on GitHub](https://github.com/Torann/laravel-geoip)
+- [Laravel 5.0/Pre-5.5 PHP Installation](https://github.com/Torann/laravel-geoip/tree/0.2.2)
 - [Laravel 4 Installation](https://github.com/Torann/laravel-geoip/tree/0.1.1)
 
 To get the latest version of GeoIP simply require it in your `composer.json` file.
 
 ~~~
-"torann/geoip": "0.2.*@dev"
+"torann/geoip": "0.3.*@dev"
 ~~~
 
 You'll then need to run `composer install` to download it and have the autoloader updated.
@@ -23,21 +24,17 @@ You'll then need to run `composer install` to download it and have the autoloade
 Once GeoIP is installed you need to register the service provider with the application. Open up `config/app.php` and find the `providers` key.
 
 ~~~php
-'providers' => array(
-
-    'Torann\GeoIP\GeoIPServiceProvider',
-
-)
+'providers' => [
+    Torann\GeoIP\GeoIPServiceProvider::class,
+]
 ~~~
 
 GeoIP also ships with a facade which provides the static syntax for creating collections. You can register the facade in the `aliases` key of your `config/app.php` file.
 
 ~~~php
-'aliases' => array(
-
-    'GeoIP' => 'Torann\GeoIP\GeoIPFacade',
-
-)
+'aliases' => [
+    'GeoIP' => Torann\GeoIP\GeoIPFacade::class,
+]
 ~~~
 
 ### Publish the configurations
@@ -58,6 +55,8 @@ $ php artisan geoip:update
 
 **Database Service**: To use the database version of [MaxMind](http://www.maxmind.com) services download the `GeoLite2-City.mmdb` from [http://dev.maxmind.com/geoip/geoip2/geolite2/](http://dev.maxmind.com/geoip/geoip2/geolite2/) and extract it to `storage/app/geoip.mmdb`. And that's it.
 
+**IP-API Continents**: To use continents with IP-API.com you must run `php artisan geoip:continents` to download the continent file.
+
 ## Usage
 
 Get the location data for a website visitor:
@@ -77,7 +76,7 @@ $location = GeoIP::getLocation('232.223.11.11');
 ### Example Data
 
 ```php
-array (
+[
     "ip"           => "232.223.11.11",
     "isoCode"      => "US",
     "country"      => "United States",
@@ -89,7 +88,7 @@ array (
     "timezone"     => "America/New_York",
     "continent"    => "NA",
     "default"      => false
-);
+];
 ```
 
 #### Default Location
@@ -101,8 +100,10 @@ In the case that a location is not found the fallback location will be returned 
 #### v0.3.0
 
 - Add IP-API.com service
+- Move 'service' to environment variable `GEOIP_SERVICE`
 - Raise PHP requirement to 5.5
-- Add Guzzle for IP-API and standard usage again, and move the updater back to guzzle.
+- Add Guzzle for IP-API and standard usage again, and move the updater back to guzzle
+- Add GeoIP Continent update command "php artisan geoip:continents"
 
 #### v0.2.1
 
