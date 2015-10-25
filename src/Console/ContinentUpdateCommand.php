@@ -52,19 +52,19 @@ class ContinentUpdateCommand extends Command
 
 		$lines = explode("\n", $res->getBody());
 
-        array_shift($lines);
+		array_shift($lines);
 
-        $output = [];
+		$output = [];
 
-        foreach ($lines as $line) {
-            $arr = str_getcsv($line);
+		foreach ($lines as $line) {
+			$arr = str_getcsv($line);
 
-            if (count($arr) < 2) {
-                continue;
-            }
+			if (count($arr) < 2) {
+				continue;
+			}
 
-            $output[$arr[0]] = $arr[1];
-        }
+			$output[$arr[0]] = $arr[1];
+		}
 
 		file_put_contents($this->outputFile, json_encode($output));
 	}
