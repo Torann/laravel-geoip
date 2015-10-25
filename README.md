@@ -47,10 +47,11 @@ $ php artisan vendor:publish
 
 A configuration file will be publish to `config/geoip.php`
 
-### Update max mind cities database
+### Update max mind cities database/continents
 
 ~~~
 $ php artisan geoip:update
+$ php artisan geoip:continents
 ~~~
 
 **Database Service**: To use the database version of [MaxMind](http://www.maxmind.com) services download the `GeoLite2-City.mmdb` from [http://dev.maxmind.com/geoip/geoip2/geolite2/](http://dev.maxmind.com/geoip/geoip2/geolite2/) and extract it to `storage/app/geoip.mmdb`. And that's it.
