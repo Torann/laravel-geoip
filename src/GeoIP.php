@@ -200,9 +200,9 @@ class GeoIP {
 		return $location;
 	}
 
-    private $guzzle;
+	private $guzzle;
 
-    private $continents;
+	private $continents;
 
 	/**
 	 * IP-API.com Service.
@@ -233,11 +233,11 @@ class GeoIP {
 			$this->guzzle = new GuzzleClient($base);
 		}
 
-        if (empty($this->continents)) {
-            if (file_exists($settings['continent_path'])) {
-                $this->continents = json_decode(file_get_contents($settings['continent_path']));
-            }
-        }
+		if (empty($this->continents)) {
+			if (file_exists($settings['continent_path'])) {
+				$this->continents = json_decode(file_get_contents($settings['continent_path']));
+			}
+		}
 
 		try {
 			$data = $this->guzzle->get('/json/' . $ip);
@@ -318,13 +318,11 @@ class GeoIP {
 	 */
 	private function checkIp($ip)
 	{
-		if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
-			return true;
-		} else if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE)) {
-			return true;
+		if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) && !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE)) {
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 
 }
