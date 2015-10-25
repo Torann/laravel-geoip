@@ -28,6 +28,11 @@
             "Torann\\GeoIP\\": "src/Torann/GeoIP"
         }
     },
+	"scripts": {
+		"post-install-cmd": [
+			"php artisan geoip:continents"
+		]
+	},
     "extra": {
         "branch-alias": {
             "dev-master": "0.2-dev"
