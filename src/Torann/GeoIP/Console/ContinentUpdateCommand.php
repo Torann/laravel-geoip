@@ -57,9 +57,13 @@ class ContinentUpdateCommand extends Command
         $output = [];
 
         foreach ($lines as $line) {
-            list ($countryCode, $continent) = str_getcsv($line);
+            $arr = str_getcsv($line);
 
-            $output[$countryCode] = $continent;
+            if (count($arr) < 2) {
+                continue;
+            }
+
+            $output[$arr[0]] = $arr[1];
         }
 
 		file_put_contents($this->outputFile, json_encode($output));
