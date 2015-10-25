@@ -275,7 +275,7 @@ class GeoIP {
 				"lat" 			=> $json->lat,
 				"lon" 			=> $json->lon,
 				"timezone" 		=> $json->timezone,
-				"continent"		=> $this->continents ? array_get($this->continents, $json->countryCode, 'Unknown') : 'Unknown',
+				"continent"		=> $this->continents ? object_get($this->continents, $json->countryCode, 'Unknown') : 'Unknown',
 				"default"       => false,
 			);
 		}
