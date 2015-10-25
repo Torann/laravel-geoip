@@ -59,6 +59,9 @@ class ContinentUpdateCommand extends Command
 		// Pop off the headers
 		$csv->pop();
 
+        // Key by country code
+        $csv = $csv->keyBy('0');
+
 		file_put_contents($this->outputFile, $csv->toJson());
 	}
 }
