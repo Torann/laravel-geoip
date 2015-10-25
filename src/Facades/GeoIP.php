@@ -1,8 +1,8 @@
-<?php namespace Torann\GeoIP;
+<?php namespace Torann\GeoIP\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class GeoIPFacade extends Facade {
+class GeoIP extends Facade {
 
 	/**
 	 * Get the registered name of the component.

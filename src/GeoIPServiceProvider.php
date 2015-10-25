@@ -21,7 +21,7 @@ class GeoIPServiceProvider extends ServiceProvider {
 	public function boot()
 	{
 		$this->publishes([
-			__DIR__.'/../../config/geoip.php' => config_path('geoip.php'),
+			__DIR__.'/config/geoip.php' => config_path('geoip.php'),
 		]);
 	}
 
