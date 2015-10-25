@@ -217,6 +217,10 @@ class GeoIP {
 		return $location;
 	}
 
+    private $guzzle;
+
+    private $continents;
+
 	/**
 	 * IP-API.com Service.
 	 *
@@ -246,6 +250,12 @@ class GeoIP {
 			$this->guzzle = new GuzzleClient($base);
 		}
 
+        if (empty($this->continents)) {
+            if (file_exists($settings['continent_path'])) {
+                $this->continents = json_decode(file_get_contents($settings['continent_path']));
+            }
+        }
+
 		try {
 			$data = $this->guzzle->get('/json/' . $ip);
 
@@ -265,7 +275,7 @@ class GeoIP {
 				"lat" 			=> $json->lat,
 				"lon" 			=> $json->lon,
 				"timezone" 		=> $json->timezone,
-				"continent"		=> 'Unknown',
+				"continent"		=> $this->continents ? array_get($this->continents, $json->countryCode, 'Unknown') : 'Unknown',
 				"default"       => false,
 			);
 		}

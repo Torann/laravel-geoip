@@ -98,6 +98,12 @@ In the case that a location is not found the fallback location will be returned 
 
 ## Change Log
 
+#### v0.3.0
+
+- Add IP-API.com service
+- Raise PHP requirement to 5.5
+- Add Guzzle for IP-API and standard usage again, and move the updater back to guzzle.
+
 #### v0.2.1
 
 - Add database_path to config

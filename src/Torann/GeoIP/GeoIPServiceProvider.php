@@ -1,6 +1,7 @@
 <?php namespace Torann\GeoIP;
 
 use Illuminate\Support\ServiceProvider;
+use Torann\GeoIP\Console\ContinentUpdatecommand;
 use Torann\GeoIP\Console\UpdateCommand;
 
 class GeoIPServiceProvider extends ServiceProvider {
@@ -41,7 +42,12 @@ class GeoIPServiceProvider extends ServiceProvider {
 		{
 			return new UpdateCommand($app['config']);
 		});
-		$this->commands(['command.geoip.update']);
+
+		$this->app['command.geoip.update_continents'] = $this->app->share(function ($app)
+		{
+			return new ContinentUpdateCommand($app['config']);
+		});
+		$this->commands(['command.geoip.update', 'command.geoip.update_continents']);
 	}
 
 	/**

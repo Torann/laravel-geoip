@@ -43,6 +43,7 @@ return array(
 		// Only for "pro"
 		'key'             => env('GEOIP_IPAPI_KEY'),
 		'secure'          => env('GEOIP_IPAPI_SECURE', true),
+		'continent_path'  => storage_path('app/continents.json')
 	),
 
 	/*
