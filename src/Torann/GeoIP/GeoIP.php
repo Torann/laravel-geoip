@@ -43,22 +43,6 @@ class GeoIP {
 	protected $location = null;
 
 	/**
-	 * Reserved IP address.
-	 *
-	 * @var array
-	 */
-	protected $reserved_ips = [
-		['0.0.0.0','2.255.255.255'],
-		['10.0.0.0','10.255.255.255'],
-		['127.0.0.0','127.255.255.255'],
-		['169.254.0.0','169.254.255.255'],
-		['172.16.0.0','172.31.255.255'],
-		['192.0.2.0','192.0.2.255'],
-		['192.168.0.0','192.168.255.255'],
-		['255.255.255.0','255.255.255.255'],
-	];
-
-	/**
 	 * Default Location data.
 	 *
 	 * @var array
@@ -334,22 +318,9 @@ class GeoIP {
 	 */
 	private function checkIp($ip)
 	{
-		if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-			$longip = ip2long($ip);
-
-			if (! empty($ip)) {
-				foreach ($this->reserved_ips as $r) {
-					$min = ip2long($r[0]);
-					$max = ip2long($r[1]);
-
-					if ($longip >= $min && $longip <= $max) {
-						return false;
-					}
-				}
-
-				return true;
-			}
-		} else if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+		if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+			return true;
+		} else if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE)) {
 			return true;
 		}
 
