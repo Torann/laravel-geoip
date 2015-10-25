@@ -25,7 +25,7 @@ class ContinentUpdateCommand extends Command
 	 *
 	 * @var string
 	 */
-	private $output;
+	private $outputFile;
 
 	/**
 	 * Create a new console command instance.
@@ -36,7 +36,7 @@ class ContinentUpdateCommand extends Command
 	{
 		parent::__construct();
 
-		$this->output = $config->get('geoip.ipapi.continent_path');
+		$this->outputFile = $config->get('geoip.ipapi.continent_path');
 	}
 
 	/**
@@ -59,6 +59,6 @@ class ContinentUpdateCommand extends Command
 		// Pop off the headers
 		$csv->pop();
 
-		file_put_contents($this->output, $csv->toJson());
+		file_put_contents($this->outputFile, $csv->toJson());
 	}
 }
