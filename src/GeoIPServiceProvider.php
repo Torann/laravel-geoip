@@ -1,7 +1,7 @@
 <?php namespace Torann\GeoIP;
 
 use Illuminate\Support\ServiceProvider;
-use Torann\GeoIP\Console\ContinentUpdatecommand;
+use Torann\GeoIP\Console\ContinentUpdateCommand;
 use Torann\GeoIP\Console\UpdateCommand;
 
 class GeoIPServiceProvider extends ServiceProvider {
