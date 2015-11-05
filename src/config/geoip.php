@@ -7,11 +7,11 @@ return array(
 	| Service
 	|--------------------------------------------------------------------------
 	|
-	| Current only supports 'maxmind'.
+	| Current only supports 'maxmind' and 'ipapi'.
 	|
 	*/
 
-	'service' => 'maxmind',
+	'service' => env('GEOIP_SERVICE', 'maxmind'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -28,6 +28,22 @@ return array(
 		'license_key'   => env('GEOIP_LICENSE_KEY'),
 		'database_path' => storage_path('app/geoip.mmdb'),
 		'update_url'    => 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz',
+	),
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| IP-API Settings
+	|--------------------------------------------------------------------------
+	|
+	| Most of these settings only apply to pro.
+	|
+	*/
+	'ipapi' => array(
+		// Only for "pro"
+		'key'             => env('GEOIP_IPAPI_KEY'),
+		'secure'          => env('GEOIP_IPAPI_SECURE', true),
+		'continent_path'  => storage_path('app/continents.json')
 	),
 
 	/*

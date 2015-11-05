@@ -3,6 +3,7 @@
 use GeoIp2\Database\Reader;
 use GeoIp2\WebService\Client;
 
+use GuzzleHttp\Client as GuzzleClient;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
@@ -42,27 +43,11 @@ class GeoIP {
 	protected $location = null;
 
 	/**
-	 * Reserved IP address.
-	 *
-	 * @var array
-	 */
-	protected $reserved_ips = array (
-		array('0.0.0.0','2.255.255.255'),
-		array('10.0.0.0','10.255.255.255'),
-		array('127.0.0.0','127.255.255.255'),
-		array('169.254.0.0','169.254.255.255'),
-		array('172.16.0.0','172.31.255.255'),
-		array('192.0.2.0','192.0.2.255'),
-		array('192.168.0.0','192.168.255.255'),
-		array('255.255.255.0','255.255.255.255'),
-	);
-
-	/**
 	 * Default Location data.
 	 *
 	 * @var array
 	 */
-	protected $default_location = array (
+	protected $default_location = [
 		"ip" 			=> "127.0.0.0",
 		"isoCode" 		=> "US",
 		"country" 		=> "United States",
@@ -74,7 +59,7 @@ class GeoIP {
 		"timezone" 		=> "America/New_York",
 		"continent"		=> "NA",
 		"default"       => true,
-	);
+	];
 
 	/**
 	 * Create a new GeoIP instance.
@@ -90,7 +75,7 @@ class GeoIP {
 		// Set custom default location
 		$this->default_location = array_merge(
 			$this->default_location,
-			$this->config->get('geoip.default_location', array())
+			$this->config->get('geoip.default_location', [])
 		);
 
 		// Set IP
@@ -185,7 +170,7 @@ class GeoIP {
 		try {
 			$record = $this->maxmind->city($ip);
 
-			$location = array(
+			$location = [
 				"ip"			=> $ip,
 				"isoCode" 		=> $record->country->isoCode,
 				"country" 		=> $record->country->name,
@@ -197,7 +182,7 @@ class GeoIP {
 				"timezone" 		=> $record->location->timeZone,
 				"continent"		=> $record->continent->code,
 				"default"       => false,
-			);
+			];
 		}
 		catch (AddressNotFoundException $e)
 		{
@@ -211,6 +196,82 @@ class GeoIP {
 		}
 
 		unset($record);
+
+		return $location;
+	}
+
+	private $guzzle;
+
+	private $continents;
+
+	/**
+	 * IP-API.com Service.
+	 *
+	 * @param  string $ip
+	 * @return array
+	 */
+	public function locate_ipapi($ip)
+	{
+		$settings = $this->config->get('geoip.ipapi');
+
+		if (empty($this->guzzle)) {
+			$base = [
+				'base_uri' => 'http://ip-api.com/',
+				'headers' => [
+					'User-Agent' => 'Laravel-GeoIP'
+				],
+				'query' => [
+					'fields' => 49663
+				]
+			];
+
+			if ($settings['key']) {
+				$base['base_uri'] = ($settings['secure'] ? 'https' : 'http') . '://pro.ip-api.com/';
+				$base['query']['key'] = $settings['key'];
+			}
+
+			$this->guzzle = new GuzzleClient($base);
+		}
+
+		if (empty($this->continents)) {
+			if (file_exists($settings['continent_path'])) {
+				$this->continents = json_decode(file_get_contents($settings['continent_path']));
+			}
+		}
+
+		try {
+			$data = $this->guzzle->get('/json/' . $ip);
+
+			$json = json_decode($data->getBody());
+
+			if ($json->status !== 'success') {
+				throw new \Exception('Request failed (' . $json->message . ')');
+			}
+
+			$location = [
+				"ip"			=> $ip,
+				"isoCode" 		=> $json->countryCode,
+				"country" 		=> $json->country,
+				"city" 			=> $json->city,
+				"state" 		=> $json->region,
+				"postal_code"   => $json->zip,
+				"lat" 			=> $json->lat,
+				"lon" 			=> $json->lon,
+				"timezone" 		=> $json->timezone,
+				"continent"		=> $this->continents ? object_get($this->continents, $json->countryCode, 'Unknown') : 'Unknown',
+				"default"       => false,
+			];
+		}
+		catch (\Exception $e)
+		{
+			$location = $this->default_location;
+
+			$logFile = 'geoip';
+
+			$log = new Logger($logFile);
+			$log->pushHandler(new StreamHandler(storage_path("logs/{$logFile}.log"), Logger::ERROR));
+			$log->addError($e);
+		}
 
 		return $location;
 	}
@@ -257,26 +318,11 @@ class GeoIP {
 	 */
 	private function checkIp($ip)
 	{
-		if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-			$longip = ip2long($ip);
-
-			if (! empty($ip)) {
-				foreach ($this->reserved_ips as $r) {
-					$min = ip2long($r[0]);
-					$max = ip2long($r[1]);
-
-					if ($longip >= $min && $longip <= $max) {
-						return false;
-					}
-				}
-
-				return true;
-			}
-		} else if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-			return true;
+		if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) && !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE)) {
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 
 }

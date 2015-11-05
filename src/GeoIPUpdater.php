@@ -47,15 +47,24 @@ class GeoIPUpdater
 		$maxMindDatabaseUrl = $this->config->get('geoip.maxmind.update_url');
 		$databasePath = $this->config->get('geoip.maxmind.database_path');
 
-        // Download zipped database to a system temp file
-        $tmpFile = tempnam(sys_get_temp_dir(), 'maxmind');
-        file_put_contents($tmpFile, fopen($maxMindDatabaseUrl, 'r'));
+		// Download zipped database to a system temp file
+		$client = new Client();
 
-        // Unzip and save database
+		$tmpFile = tempnam(sys_get_temp_dir(), 'maxmind');
+
+		$res = $client->get($maxMindDatabaseUrl, [
+			'sink' => $tmpFile
+		]);
+
+		if ($res->getStatusCode() != 200) {
+			return false;
+		}
+
+		// Unzip and save database
 		file_put_contents($databasePath, gzopen($tmpFile, 'r'));
 
-        // Remove temp file
-        @unlink($tmpFile);
+		// Remove temp file
+		@unlink($tmpFile);
 
 		return $databasePath;
 	}
