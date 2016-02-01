@@ -27,6 +27,8 @@ return array(
 		'user_id'       => env('GEOIP_USER_ID'),
 		'license_key'   => env('GEOIP_LICENSE_KEY'),
 		'database_path' => storage_path('app/geoip.mmdb'),
+		'tmp_path'		=> storage_path('app/tmp'),
+		'mmdb'			=> 'GeoIP2-City.mmdb',
 		'update_url'    => 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz',
 	),
 

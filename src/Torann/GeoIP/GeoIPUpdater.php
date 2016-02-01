@@ -46,16 +46,36 @@ class GeoIPUpdater
 	{
 		$maxMindDatabaseUrl = $this->config->get('geoip.maxmind.update_url');
 		$databasePath = $this->config->get('geoip.maxmind.database_path');
+		$tmpPath = $this->config->get('geoip.maxmind.tmp_path');
+		$mmdb = $tmpPath = $this->config->get('geoip.maxmind.mmdb');
 
-        // Download zipped database to a system temp file
-        $tmpFile = tempnam(sys_get_temp_dir(), 'maxmind');
-        file_put_contents($tmpFile, fopen($maxMindDatabaseUrl, 'r'));
 
-        // Unzip and save database
-		file_put_contents($databasePath, gzopen($tmpFile, 'r'));
+      	if(!is_dir($tmp_path)) {
+			mkdir($tmp_path);
+		}
 
-        // Remove temp file
-        @unlink($tmpFile);
+		$tmp = $tmp_path . 'tmp.tar.gz';
+        file_put_contents($tmp, fopen($maxMindDatabaseUrl, 'r'));
+
+        $archive = new PharData($tmp);
+        $archive->extractTo($tmp_path);
+		$contents = scandir($tmp_path);
+		$tmp_dir;
+		foreach ($contents as $content) {
+		    if ($content!= '.' &&  $content != '..'){
+			    if(is_dir($tmp_path .$content)) {
+			    	$tmp_dir = $tmp_path .$content;
+			    	file_put_contents($databasePath,  fopen($tmp_path .$content.'/' . $mmdb, 'r'));
+			   	}
+			}
+		}
+		
+		unlink($tmp);
+		foreach (scandir($tmp_dir) as $item) {
+		    if ($item == '.' || $item == '..') continue;
+		    unlink($tmp_dir.DIRECTORY_SEPARATOR.$item);
+		}
+		rmdir($tmp_dir);
 
 		return $databasePath;
 	}
