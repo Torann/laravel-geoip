@@ -1,35 +1,48 @@
 {
-    "name": "torann/geoip",
-    "description": "Supports the two main GeoIP services (infoDB and Maxmind).",
-    "keywords": ["laravel", "laravel 5", "geoip", "location", "geolocation"],
-    "license": "BSD 2-Clause",
-    "authors": [
-        {
-            "name": "Daniel Stainback",
-            "email": "daniel@lyften.com"
-        }
-    ],
-    "require": {
-        "php": ">=5.3.0",
-        "illuminate/support": "~5.0",
-        "illuminate/session": "~5.0",
-        "illuminate/console": "~5.0",
-        "illuminate/config": "~5.0",
-        "monolog/monolog": "~1.11",
-        "geoip2/geoip2": "~2.1"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "~4.0",
-        "phpspec/phpspec": "~2.1"
-    },
-    "autoload": {
-        "psr-4": {
-            "Torann\\GeoIP\\": "src/Torann/GeoIP"
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "0.2-dev"
-        }
+  "name": "torann/geoip",
+  "description": "Support for multiple GeoIP services.",
+  "keywords": [
+    "laravel",
+    "laravel 5",
+    "geoip",
+    "location",
+    "geolocation",
+    "MaxMind",
+    "IP API",
+    "infoDB"
+  ],
+  "license": "BSD 2-Clause",
+  "authors": [
+    {
+      "name": "Daniel Stainback",
+      "email": "daniel@lyften.com"
     }
+  ],
+  "require": {
+    "php": ">=5.5.9",
+    "illuminate/support": "~5.0",
+    "illuminate/session": "~5.0",
+    "illuminate/console": "~5.0"
+  },
+  "suggest": {
+    "geoip2/geoip2": "Required to use the MaxMind database or web service with GeoIP (~2.1).",
+    "monolog/monolog": "Allows for storing location not found errors to the log"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.0",
+    "phpspec/phpspec": "~2.1"
+  },
+  "autoload": {
+    "files": [
+      "src/helpers.php"
+    ],
+    "psr-4": {
+      "Torann\\GeoIP\\": "src/"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0-dev"
+    }
+  }
 }
