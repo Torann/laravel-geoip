@@ -175,10 +175,10 @@ class GeoIP {
 
 		if (empty($this->maxmind)) {
 			if ($settings['type'] === 'web_service') {
-				$this->maxmind = new Client($settings['user_id'], $settings['license_key']);
+				$this->maxmind = new Client($settings['user_id'], $settings['license_key'], $settings['locales']);
 			}
 			else {
-				$this->maxmind = new Reader($settings['database_path']);
+				$this->maxmind = new Reader($settings['database_path'], $settings['locales']);
 			}
 		}
 
