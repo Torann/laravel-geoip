@@ -47,3 +47,13 @@ For Laravel 4 Installation see [version 0.1.1](https://github.com/Torann/laravel
 - Log address not found exceptions
 - Supports a custom default location
 
+## Contributions
+
+Many people have contributed to project since its inception.
+
+Thanks to:
+
+- [nikkiii](https://github.com/nikkiii)
+- [jeffhennis](https://github.com/jeffhennis)
+- [max-kovpak](https://github.com/max-kovpak)
+- [dotpack](https://github.com/dotpack)
