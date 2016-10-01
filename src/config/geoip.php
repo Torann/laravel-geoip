@@ -60,15 +60,15 @@ return [
 
         'maxmind_api' => [
             'class' => \Torann\GeoIP\Services\MaxMindWebService::class,
-            'user_id' => env('GEOIP_USER_ID'),
-            'license_key' => env('GEOIP_LICENSE_KEY'),
+            'user_id' => env('MAXMIND_USER_ID'),
+            'license_key' => env('MAXMIND_LICENSE_KEY'),
             'locales' => ['en'],
         ],
 
         'ipapi' => [
             'class' => \Torann\GeoIP\Services\IPApi::class,
-            'secure' => env('GEOIP_IPAPI_SECURE', true),
-            'key' => env('GEOIP_IPAPI_KEY', true),
+            'secure' => true,
+            'key' => env('IPAPI_KEY'),
             'continent_path' => storage_path('app/continents.json'),
         ],
 
