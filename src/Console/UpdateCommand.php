@@ -52,7 +52,7 @@ class UpdateCommand extends Command
 
         // Ensure the selected service supports updating
         if (method_exists($service, 'update') === false) {
-            $this->error('The current service "' . get_class($service). '" does not support updating.');
+            $this->info('The current service "' . get_class($service). '" does not support updating.');
             return;
         }
 
@@ -60,7 +60,7 @@ class UpdateCommand extends Command
 
         // Perform update
         if ($result = $service->update()) {
-            $this->info($result);
+            $this->comment($result);
         }
         else {
             $this->error('Update failed!');

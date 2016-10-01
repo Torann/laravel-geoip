@@ -3,17 +3,16 @@
 namespace Torann\GeoIP\Services;
 
 use GeoIp2\Database\Reader;
-use GeoIp2\WebService\Client;
 use GeoIp2\Exception\AddressNotFoundException;
 
-class MaxMind extends AbstractService
+class MaxMindDatabase extends AbstractService
 {
     /**
-     * Service client instance.
+     * Service reader instance.
      *
-     * @var Reader|Client
+     * @var \GeoIp2\Database\Reader
      */
-    protected $client;
+    protected $reader;
 
     /**
      * The "booting" method of the service.
@@ -22,19 +21,10 @@ class MaxMind extends AbstractService
      */
     public function boot()
     {
-        if ($this->getConfig('type') === 'web_service') {
-            $this->client = new Client(
-                $this->getConfig('user_id'),
-                $this->getConfig('license_key'),
-                $this->getConfig('locales', ['en'])
-            );
-        }
-        else {
-            $this->client = new Reader(
-                $this->getConfig('database_path'),
-                $this->getConfig('locales', ['en'])
-            );
-        }
+        $this->reader = new Reader(
+            $this->getConfig('database_path'),
+            $this->getConfig('locales', ['en'])
+        );
     }
 
     /**
@@ -42,7 +32,7 @@ class MaxMind extends AbstractService
      */
     public function locate($ip)
     {
-        $record = $this->client->city($ip);
+        $record = $this->reader->city($ip);
 
         return [
             'ip' => $ip,

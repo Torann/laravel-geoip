@@ -18,7 +18,7 @@ Determine the geographical location of website visitors based on their IP addres
 From the command line run:
 
 ```bash
-composer require torann/geoip
+$ composer require torann/geoip
 ```
 
 ### Laravel
@@ -33,7 +33,7 @@ Once installed you need to register the service provider with the application. O
 ]
 ```
 
-This package also comes with a facade, which provides an easy way to call the the class. Open up `config/app.php`` and find the aliases key.
+This package also comes with a facade, which provides an easy way to call the the class. Open up `config/app.php` and find the aliases key.
 
 ```php
 'aliases' => [
