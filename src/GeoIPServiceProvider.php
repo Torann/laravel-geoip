@@ -21,9 +21,11 @@ class GeoIPServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([
-            __DIR__ . '/config/geoip.php' => config_path('geoip.php'),
-        ]);
+        if ($this->isLumen() === false) {
+            $this->publishes([
+                __DIR__ . '/config/geoip.php' => config_path('geoip.php'),
+            ], 'config');
+        }
     }
 
     /**
@@ -48,15 +50,12 @@ class GeoIPServiceProvider extends ServiceProvider
     }
 
     /**
-     * Get the services provided by the provider.
+     * Check if package is running under Lumen app
      *
-     * @return array
+     * @return bool
      */
-    public function provides()
+    protected function isLumen()
     {
-        return [
-            'geoip',
-            'command.geoip.update',
-        ];
+        return str_contains($this->app->version(), 'Lumen') === true;
     }
 }
