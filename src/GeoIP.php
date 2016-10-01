@@ -132,7 +132,11 @@ class GeoIP
     {
         // Check session for location
         if ($ip === null && $position = $this->session->get('geoip-location')) {
-            return $position;
+
+            // Make sure the IP is the same
+            if ($position['ip'] === $this->remote_ip) {
+                return $position;
+            }
         }
 
         // Set location
