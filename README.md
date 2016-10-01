@@ -29,6 +29,7 @@ For Laravel 4 Installation see [version 0.1.1](https://github.com/Torann/laravel
 - Add `state_name` to `$location` array #46
 - Set locales in config #45
 - Raise PHP requirement to 5.5
+- Fix file structure to adher to PSR-4 file structure. #40
 - Support custom Geo IP services
   - Added ip-api.com service (Thanks to [nikkiii](https://github.com/nikkiii))
 
