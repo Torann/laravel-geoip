@@ -22,9 +22,9 @@ class MaxMindWebService extends AbstractService
     public function boot()
     {
         $this->client = new Client(
-            $this->getConfig('user_id'),
-            $this->getConfig('license_key'),
-            $this->getConfig('locales', ['en'])
+            $this->config('user_id'),
+            $this->config('license_key'),
+            $this->config('locales', ['en'])
         );
     }
 
@@ -47,7 +47,6 @@ class MaxMindWebService extends AbstractService
             'lon' => $record->location->longitude,
             'timezone' => $record->location->timeZone,
             'continent' => $record->continent->code,
-            'default' => false,
         ];
     }
 }

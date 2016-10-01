@@ -40,16 +40,16 @@ class IPApi extends AbstractService
         ];
 
         // Using the Pro service
-        if ($this->getConfig('key')) {
-            $base['base_uri'] = ($this->getConfig('secure') ? 'https' : 'http') . '://pro.ip-api.com/';
-            $base['query']['key'] = $this->getConfig('key');
+        if ($this->config('key')) {
+            $base['base_uri'] = ($this->config('secure') ? 'https' : 'http') . '://pro.ip-api.com/';
+            $base['query']['key'] = $this->config('key');
         }
 
         $this->client = new HttpClient($base);
 
         // Set continents
-        if (file_exists($this->getConfig('continent_path'))) {
-            $this->continents = json_decode(file_get_contents($this->getConfig('continent_path')), true);
+        if (file_exists($this->config('continent_path'))) {
+            $this->continents = json_decode(file_get_contents($this->config('continent_path')), true);
         }
     }
 
@@ -86,7 +86,6 @@ class IPApi extends AbstractService
             'lon' => $json->lon,
             'timezone' => $json->timezone,
             'continent' => $this->getContinent($json->countryCode),
-            'default' => false,
         ];
     }
 
@@ -122,7 +121,7 @@ class IPApi extends AbstractService
         }
 
         // Get path
-        $path = $this->getConfig('continent_path');
+        $path = $this->config('continent_path');
 
         file_put_contents($path, json_encode($output));
 

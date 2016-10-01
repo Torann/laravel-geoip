@@ -34,11 +34,11 @@ return [
     | Here you may specify the default storage driver that should be used
     | by the framework.
     |
-    | Supported: "maxmind", "ipapi"
+    | Supported: "maxmind_database", "maxmind_api", "ipapi"
     |
     */
 
-    'service' => env('GEOIP_SERVICE', 'ipapi'),
+    'service' => 'maxmind_database',
 
     /*
     |--------------------------------------------------------------------------
@@ -51,19 +51,24 @@ return [
 
     'services' => [
 
-        'maxmind' => [
-            'class' => \Torann\GeoIP\Services\MaxMind::class,
-            'type' => env('GEOIP_DRIVER', 'database'), // database or web_service
-            'user_id' => env('GEOIP_USER_ID'),
-            'license_key' => env('GEOIP_LICENSE_KEY'),
+        'maxmind_database' => [
+            'class' => \Torann\GeoIP\Services\MaxMindDatabase::class,
             'database_path' => storage_path('app/geoip.mmdb'),
             'update_url' => 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz',
+            'locales' => ['en'],
+        ],
+
+        'maxmind_api' => [
+            'class' => \Torann\GeoIP\Services\MaxMindWebService::class,
+            'user_id' => env('GEOIP_USER_ID'),
+            'license_key' => env('GEOIP_LICENSE_KEY'),
             'locales' => ['en'],
         ],
 
         'ipapi' => [
             'class' => \Torann\GeoIP\Services\IPApi::class,
             'secure' => env('GEOIP_IPAPI_SECURE', true),
+            'key' => env('GEOIP_IPAPI_KEY', true),
             'continent_path' => storage_path('app/continents.json'),
         ],
 

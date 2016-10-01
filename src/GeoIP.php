@@ -4,9 +4,8 @@ namespace Torann\GeoIP;
 
 use Exception;
 use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-
 use Illuminate\Support\Arr;
+use Monolog\Handler\StreamHandler;
 use Illuminate\Session\Store as SessionStore;
 
 class GeoIP
@@ -89,11 +88,11 @@ class GeoIP
         // Set custom default location
         $this->default_location = array_merge(
             $this->default_location,
-            $this->getConfig('default_location', [])
+            $this->config('default_location', [])
         );
 
         // Include currencies
-        if ($this->getConfig('include_currency', false)) {
+        if ($this->config('include_currency', false)) {
             $this->currencies = include(__DIR__ . '/Support/Currencies.php');
         }
 
@@ -102,19 +101,9 @@ class GeoIP
     }
 
     /**
-     * Save location data in the session.
+     * Get the location from the provided IP.
      *
-     * @return void
-     */
-    function saveLocation()
-    {
-        $this->session->set('geoip-location', $this->location);
-    }
-
-    /**
-     * Get location from IP.
-     *
-     * @param  string $ip Optional
+     * @param string $ip
      *
      * @return array
      */
@@ -125,7 +114,7 @@ class GeoIP
 
         // Save user's location
         if ($ip === null) {
-            $this->saveLocation();
+            $this->session->set('geoip-location', $this->location);
         }
 
         return $this->location;
@@ -154,45 +143,28 @@ class GeoIP
 
         // Check if the ip is not local or empty
         if ($this->isValid($ip)) {
-//            try {
+            try {
+                // Find location
                 $location = $this->getService()->locate($ip);
-//            }
-//            catch (\Exception $e) {
-//                if ($this->getConfig('log_failures', true) === true) {
-//                    $log = new Logger('geoip');
-//                    $log->pushHandler(new StreamHandler(storage_path('logs/geoip.log'), Logger::ERROR));
-//                    $log->addError($e);
-//                }
-//            }
 
-            // Set currency if not already set by the service
-            if (isset($location['currency']) === false) {
-                $location['currency'] = $this->getCurrency($location['iso_code']);
+                // Set currency if not already set by the service
+                if (isset($location['currency']) === false) {
+                    $location['currency'] = $this->getCurrency($location['iso_code']);
+                }
+
+                // Set default
+                $location['default'] = false;
+            }
+            catch (\Exception $e) {
+                if ($this->config('log_failures', true) === true) {
+                    $log = new Logger('geoip');
+                    $log->pushHandler(new StreamHandler(storage_path('logs/geoip.log'), Logger::ERROR));
+                    $log->addError($e);
+                }
             }
         }
 
         return $location;
-    }
-
-    /**
-     * Get service instance.
-     *
-     * @return \Torann\GeoIP\Contracts\ServiceInterface
-     */
-    public function getService()
-    {
-        if ($this->service === null) {
-            // Get driver configuration
-            $config = $this->getConfig('services.' . $this->getConfig('service'), []);
-
-            // Get driver class
-            $driver = Arr::pull($config, 'class');
-
-            // Create driver instance
-            $this->service = app($driver, [$config]);
-        }
-
-        return $this->service;
     }
 
     /**
@@ -208,19 +180,24 @@ class GeoIP
     }
 
     /**
-     * Get the client IP address.
+     * Get service instance.
      *
-     * @param Exception $e
-     *
-     * @return string
+     * @return \Torann\GeoIP\Contracts\ServiceInterface
      */
-    private function log(Exception $e)
+    public function getService()
     {
-        if ($this->getConfig('log_failures', true) === true) {
-            $log = new Logger('geoip');
-            $log->pushHandler(new StreamHandler(storage_path('logs/geoip.log'), Logger::ERROR));
-            $log->addError($e);
+        if ($this->service === null) {
+            // Get driver configuration
+            $config = $this->config('services.' . $this->config('service'), []);
+
+            // Get driver class
+            $driver = Arr::pull($config, 'class');
+
+            // Create driver instance
+            $this->service = app($driver, [$config]);
         }
+
+        return $this->service;
     }
 
     /**
@@ -228,34 +205,31 @@ class GeoIP
      *
      * @return string
      */
-    private function getClientIP()
+    public function getClientIP()
     {
-        if (getenv('HTTP_CLIENT_IP')) {
-            $ipaddress = getenv('HTTP_CLIENT_IP');
+        if ($ip = getenv('HTTP_CLIENT_IP')) {
+            return $ip;
         }
-        else if (getenv('HTTP_X_FORWARDED_FOR')) {
-            $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
+        else if ($ip = getenv('HTTP_X_FORWARDED_FOR')) {
+            return $ip;
         }
-        else if (getenv('HTTP_X_FORWARDED')) {
-            $ipaddress = getenv('HTTP_X_FORWARDED');
+        else if ($ip = getenv('HTTP_X_FORWARDED')) {
+            return $ip;
         }
-        else if (getenv('HTTP_FORWARDED_FOR')) {
-            $ipaddress = getenv('HTTP_FORWARDED_FOR');
+        else if ($ip = getenv('HTTP_FORWARDED_FOR')) {
+            return $ip;
         }
-        else if (getenv('HTTP_FORWARDED')) {
-            $ipaddress = getenv('HTTP_FORWARDED');
+        else if ($ip = getenv('HTTP_FORWARDED')) {
+            return $ip;
         }
-        else if (getenv('REMOTE_ADDR')) {
-            $ipaddress = getenv('REMOTE_ADDR');
+        else if ($ip = getenv('REMOTE_ADDR')) {
+            return $ip;
         }
         else if (isset($_SERVER['REMOTE_ADDR'])) {
-            $ipaddress = $_SERVER['REMOTE_ADDR'];
-        }
-        else {
-            $ipaddress = '127.0.0.0';
+            return $_SERVER['REMOTE_ADDR'];
         }
 
-        return $ipaddress;
+        return '127.0.0.0';
     }
 
     /**
@@ -284,7 +258,7 @@ class GeoIP
      *
      * @return mixed
      */
-    public function getConfig($key, $default = null)
+    public function config($key, $default = null)
     {
         return Arr::get($this->config, $key, $default);
     }

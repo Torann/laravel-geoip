@@ -45,7 +45,7 @@ abstract class AbstractService implements ServiceInterface
      *
      * @return mixed
      */
-    protected function getConfig($key, $default = null)
+    protected function config($key, $default = null)
     {
         return Arr::get($this->config, $key, $default);
     }

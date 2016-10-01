@@ -22,8 +22,8 @@ class MaxMindDatabase extends AbstractService
     public function boot()
     {
         $this->reader = new Reader(
-            $this->getConfig('database_path'),
-            $this->getConfig('locales', ['en'])
+            $this->config('database_path'),
+            $this->config('locales', ['en'])
         );
     }
 
@@ -46,7 +46,6 @@ class MaxMindDatabase extends AbstractService
             'lon' => $record->location->longitude,
             'timezone' => $record->location->timeZone,
             'continent' => $record->continent->code,
-            'default' => false,
         ];
     }
 
@@ -57,12 +56,12 @@ class MaxMindDatabase extends AbstractService
      */
     public function update()
     {
-        if ($this->getConfig('database_path', false) === false) {
+        if ($this->config('database_path', false) === false) {
             return null;
         }
 
-        $maxMindDatabaseUrl = $this->getConfig('update_url');
-        $databasePath = $this->getConfig('database_path');
+        $maxMindDatabaseUrl = $this->config('update_url');
+        $databasePath = $this->config('database_path');
 
         // Download zipped database to a system temp file
         $tmpFile = tempnam(sys_get_temp_dir(), 'maxmind');
