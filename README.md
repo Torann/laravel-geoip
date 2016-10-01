@@ -11,6 +11,7 @@ Determine the geographical location and currency of website visitors based on th
 
 - [GeoIP for Laravel 5 on Packagist](https://packagist.org/packages/torann/geoip)
 - [GeoIP for Laravel 5 on GitHub](https://github.com/Torann/laravel-geoip)
+- [Upgrade Guides](http://lyften.com/projects/laravel-geoip/doc/upgrade.html)
 
 ## Official Documentation
 
