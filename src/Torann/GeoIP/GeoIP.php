@@ -8,6 +8,7 @@ use Monolog\Handler\StreamHandler;
 
 use GeoIp2\Exception\AddressNotFoundException;
 
+use Illuminate\Support\Arr;
 use Illuminate\Config\Repository;
 use Illuminate\Session\Store as SessionStore;
 
@@ -174,11 +175,18 @@ class GeoIP {
 		$settings = $this->config->get('geoip.maxmind');
 
 		if (empty($this->maxmind)) {
-			if ($settings['type'] === 'web_service') {
-				$this->maxmind = new Client($settings['user_id'], $settings['license_key'], $settings['locales']);
+			if (Arr::get($settings, 'type') === 'web_service') {
+				$this->maxmind = new Client(
+                    Arr::get($settings, 'user_id'),
+                    Arr::get($settings, 'license_key'),
+                    Arr::get($settings, 'locales', ['en'])
+                );
 			}
 			else {
-				$this->maxmind = new Reader($settings['database_path'], $settings['locales']);
+				$this->maxmind = new Reader(
+                    Arr::get($settings, 'database_path'),
+                    Arr::get($settings, 'locales', ['en'])
+                );
 			}
 		}
 
