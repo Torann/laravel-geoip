@@ -2,6 +2,7 @@
 
 namespace Torann\GeoIP\Services;
 
+use Exception;
 use GeoIp2\Database\Reader;
 use GeoIp2\Exception\AddressNotFoundException;
 
@@ -53,26 +54,34 @@ class MaxMindDatabase extends AbstractService
      * Update function for service.
      *
      * @return string
+     * @throws Exception
      */
     public function update()
     {
         if ($this->config('database_path', false) === false) {
-            return null;
+            throw new Exception('Database path not set in config file.');
         }
 
-        $maxMindDatabaseUrl = $this->config('update_url');
-        $databasePath = $this->config('database_path');
+        // Get settings
+        $url = $this->config('update_url');
+        $path = $this->config('database_path');
+
+        // Get header response
+        $headers = get_headers($url);
+        if (substr($headers[0], 9, 3) != '200') {
+            throw new Exception('Unable to download database. ('. substr($headers[0], 13) .')');
+        }
 
         // Download zipped database to a system temp file
         $tmpFile = tempnam(sys_get_temp_dir(), 'maxmind');
-        file_put_contents($tmpFile, fopen($maxMindDatabaseUrl, 'r'));
+        file_put_contents($tmpFile, fopen($url, 'r'));
 
         // Unzip and save database
-        file_put_contents($databasePath, gzopen($tmpFile, 'r'));
+        file_put_contents($path, gzopen($tmpFile, 'r'));
 
         // Remove temp file
         @unlink($tmpFile);
 
-        return "Database file ({$databasePath}) updated.";
+        return "Database file ({$path}) updated.";
     }
 }
