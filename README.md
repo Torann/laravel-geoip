@@ -1,5 +1,6 @@
 # GeoIP for Laravel 5
 
+[![Build Status](https://travis-ci.org/Torann/laravel-geoip.svg?branch=master)](https://travis-ci.org/Torann/laravel-geoip)
 [![Latest Stable Version](https://poser.pugx.org/torann/geoip/v/stable.png)](https://packagist.org/packages/torann/geoip)
 [![Total Downloads](https://poser.pugx.org/torann/geoip/downloads.png)](https://packagist.org/packages/torann/geoip)
 [![Patreon donate button](https://img.shields.io/badge/patreon-donate-yellow.svg)](https://www.patreon.com/torann)
