@@ -68,7 +68,7 @@ class GeoIP
         'lon' => -72.92,
         'timezone' => 'America/New_York',
         'continent' => 'NA',
-        'currency' => null,
+        'currency' => 'USD',
         'default' => true,
     ];
 
