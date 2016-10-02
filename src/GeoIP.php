@@ -75,7 +75,7 @@ class GeoIP
     /**
      * Create a new GeoIP instance.
      *
-     * @param array        $config
+     * @param array $config
      */
     public function __construct(array $config)
     {
@@ -87,11 +87,6 @@ class GeoIP
             $this->config('default_location', [])
         );
 
-        // Include currencies
-        if ($this->config('include_currency', false)) {
-            $this->currencies = include(__DIR__ . '/Support/Currencies.php');
-        }
-
         // Set IP
         $this->remote_ip = $this->default_location['ip'] = $this->getClientIP();
     }
@@ -101,7 +96,7 @@ class GeoIP
      *
      * @param string $ip
      *
-     * @return array
+     * @return \Torann\GeoIP\Location
      */
     public function getLocation($ip = null)
     {
@@ -121,7 +116,7 @@ class GeoIP
      *
      * @param string $ip
      *
-     * @return array
+     * @return \Torann\GeoIP\Location
      * @throws \Exception
      */
     private function find($ip = null)
@@ -173,6 +168,10 @@ class GeoIP
      */
     public function getCurrency($iso)
     {
+        if ($this->currencies === null && $this->config('include_currency', false)) {
+            $this->currencies = include(__DIR__ . '/Support/Currencies.php');
+        }
+
         return Arr::get($this->currencies, $iso);
     }
 
