@@ -22,6 +22,11 @@ class MaxMindDatabase extends AbstractService
      */
     public function boot()
     {
+        // Copy test database for now
+        if (file_exists($this->config('database_path')) === false) {
+            copy(__DIR__ . '/../../resources/geoip.mmdb', $this->config('database_path'));
+        }
+
         $this->reader = new Reader(
             $this->config('database_path'),
             $this->config('locales', ['en'])
