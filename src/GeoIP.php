@@ -58,7 +58,6 @@ class GeoIP
      */
     protected $default_location = [
         'ip' => '127.0.0.0',
-        'isoCode' => 'US', // @deprecated
         'iso_code' => 'US',
         'country' => 'United States',
         'city' => 'New Haven',

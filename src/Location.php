@@ -85,6 +85,16 @@ class Location implements ArrayAccess
     }
 
     /**
+     * Is the location the default.
+     *
+     * @return bool
+     */
+    public function getDefaultAttribute($value)
+    {
+        return is_null($value) ? false : $value;
+    }
+
+    /**
      * Get the instance as an array.
      *
      * @return array

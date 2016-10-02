@@ -28,8 +28,9 @@
     "monolog/monolog": "Allows for storing location not found errors to the log"
   },
   "require-dev": {
-    "phpunit/phpunit": "~4.0",
-    "phpspec/phpspec": "~2.1"
+    "phpunit/phpunit": "^4.8",
+    "mockery/mockery": "^0.9.4",
+    "geoip2/geoip2": "~2.1"
   },
   "autoload": {
     "files": [
@@ -37,6 +38,14 @@
     ],
     "psr-4": {
       "Torann\\GeoIP\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "files": [
+      "tests/TestFunctions.php"
+    ],
+    "psr-4": {
+      "Torann\\GeoIP\\Tests\\": "tests/"
     }
   },
   "extra": {

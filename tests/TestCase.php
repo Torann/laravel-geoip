@@ -1,0 +1,51 @@
+<?php
+
+namespace Torann\GeoIP\Tests;
+
+use Mockery;
+use PHPUnit_Framework_TestCase;
+
+class TestCase extends PHPUnit_Framework_TestCase
+{
+    public static $functions;
+
+    public function setUp()
+    {
+        self::$functions = Mockery::mock();
+    }
+
+    public function tearDown()
+    {
+        Mockery::close();
+    }
+
+    protected function makeGeoIP(array $config = [])
+    {
+        $config = array_merge($this->getConfig(), $config);
+
+        return new \Torann\GeoIP\GeoIP($config);
+    }
+
+    protected function getConfig()
+    {
+        $config = include(__DIR__ . '/../config/geoip.php');
+
+        $this->databaseCheck($config['services']['maxmind_database']['database_path']);
+
+        return $config;
+    }
+
+    /**
+     * Check for test database and make a copy of it
+     * if it does not exist.
+     *
+     * @param string $database
+     */
+    protected function databaseCheck($database)
+    {
+        if (file_exists($database) === false) {
+            @mkdir(dirname($database), 0755, true);
+            copy(__DIR__ . '/../resources/geoip.mmdb', $database);
+        }
+    }
+}
