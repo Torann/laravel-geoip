@@ -35,7 +35,7 @@ class GeoIP
      *
      * @var array
      */
-    protected $currencies = [];
+    protected $currencies = null;
 
     /**
      * GeoIP service instance.
