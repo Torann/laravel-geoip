@@ -74,7 +74,7 @@ class IPApi extends AbstractService
             throw new Exception('Request failed (' . $json->message . ')');
         }
 
-        return [
+        return $this->hydrate([
             'ip' => $ip,
             'iso_code' => $json->countryCode,
             'country' => $json->country,
@@ -86,7 +86,7 @@ class IPApi extends AbstractService
             'lon' => $json->lon,
             'timezone' => $json->timezone,
             'continent' => $this->getContinent($json->countryCode),
-        ];
+        ]);
     }
 
     /**

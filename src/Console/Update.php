@@ -2,10 +2,9 @@
 
 namespace Torann\GeoIP\Console;
 
-use Torann\GeoIP\GeoIP;
 use Illuminate\Console\Command;
 
-class UpdateCommand extends Command
+class Update extends Command
 {
     /**
      * The console command name.
@@ -19,26 +18,7 @@ class UpdateCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Update geoip database files to the latest version';
-
-    /**
-     * GeoIP instance.
-     *
-     * @var \Torann\GeoIP\GeoIP
-     */
-    protected $geoip;
-
-    /**
-     * Create a new console command instance.
-     *
-     * @param GeoIP $geoip
-     */
-    public function __construct(GeoIP $geoip)
-    {
-        parent::__construct();
-
-        $this->geoip = $geoip;
-    }
+    protected $description = 'Update GeoIP database files to the latest version';
 
     /**
      * Execute the console command.
@@ -48,7 +28,7 @@ class UpdateCommand extends Command
     public function fire()
     {
         // Get default service
-        $service = $this->geoip->getService();
+        $service = app('geoip')->getService();
 
         // Ensure the selected service supports updating
         if (method_exists($service, 'update') === false) {
@@ -60,7 +40,7 @@ class UpdateCommand extends Command
 
         // Perform update
         if ($result = $service->update()) {
-            $this->comment($result);
+            $this->info($result);
         }
         else {
             $this->error('Update failed!');

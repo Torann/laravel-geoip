@@ -27,6 +27,8 @@ For Laravel 4 Installation see [version 0.1.1](https://github.com/Torann/laravel
 
 - Major code refactoring and cleanup
 - Add currency support
+- Add Location object
+- Add cache drivers
 - Add `state_name` to `$location` array #46
 - Set locales in config #45
 - Raise PHP requirement to 5.5

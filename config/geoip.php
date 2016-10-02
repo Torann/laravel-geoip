@@ -76,6 +76,46 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Default Cache Driver
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the default cache storage that should be used
+    | by the GeoIP package.
+    |
+    | Supported: "sync", "session", "laravel"
+    |
+    */
+
+    'cache' => 'sync',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cache Driver Specific Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure as many cache stores as you wish. The base class
+    | name of the driver is used as the driver key.
+    |
+    */
+
+    'cache_drivers' => [
+
+        'sync' => [
+            'class' => \Torann\GeoIP\Cache\Sync::class,
+        ],
+
+        'session' => [
+            'class' => \Torann\GeoIP\Cache\Session::class,
+        ],
+
+        'laravel' => [
+            'class' => \Torann\GeoIP\Cache\Laravel::class,
+            'expires' => 60,
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Default Location
     |--------------------------------------------------------------------------
     |

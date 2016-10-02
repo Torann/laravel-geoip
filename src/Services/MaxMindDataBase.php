@@ -35,7 +35,7 @@ class MaxMindDatabase extends AbstractService
     {
         $record = $this->reader->city($ip);
 
-        return [
+        return $this->hydrate([
             'ip' => $ip,
             'iso_code' => $record->country->isoCode,
             'country' => $record->country->name,
@@ -47,7 +47,7 @@ class MaxMindDatabase extends AbstractService
             'lon' => $record->location->longitude,
             'timezone' => $record->location->timeZone,
             'continent' => $record->continent->code,
-        ];
+        ]);
     }
 
     /**

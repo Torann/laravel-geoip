@@ -6,17 +6,9 @@ use Exception;
 use Monolog\Logger;
 use Illuminate\Support\Arr;
 use Monolog\Handler\StreamHandler;
-use Illuminate\Session\Store as SessionStore;
 
 class GeoIP
 {
-    /**
-     * The session store.
-     *
-     * @var \Illuminate\Session\Store
-     */
-    protected $session;
-
     /**
      * Illuminate config repository instance.
      *
@@ -32,9 +24,9 @@ class GeoIP
     protected $remote_ip = null;
 
     /**
-     * Location data.
+     * Current location instance.
      *
-     * @var array
+     * @var Location
      */
     protected $location = null;
 
@@ -51,6 +43,13 @@ class GeoIP
      * @var Contracts\ServiceInterface
      */
     protected $service;
+
+    /**
+     * GeoIP cache instance.
+     *
+     * @var Contracts\CacheInterface
+     */
+    protected $cache;
 
     /**
      * Default Location data.
@@ -78,12 +77,10 @@ class GeoIP
      * Create a new GeoIP instance.
      *
      * @param array        $config
-     * @param SessionStore $session
      */
-    public function __construct(array $config, SessionStore $session)
+    public function __construct(array $config)
     {
         $this->config = $config;
-        $this->session = $session;
 
         // Set custom default location
         $this->default_location = array_merge(
@@ -114,7 +111,7 @@ class GeoIP
 
         // Save user's location
         if ($ip === null) {
-            $this->session->set('geoip-location', $this->location);
+            $this->getCache()->set($ip, $this->location);
         }
 
         return $this->location;
@@ -123,24 +120,19 @@ class GeoIP
     /**
      * Find location from IP.
      *
-     * @param  string $ip Optional
+     * @param string $ip
      *
      * @return array
      * @throws \Exception
      */
     private function find($ip = null)
     {
-        // Check session for location
-        if ($ip === null && $position = $this->session->get('geoip-location')) {
-
-            // Make sure the IP is the same
-            if ($position['ip'] === $this->remote_ip) {
-                return $position;
+        // Check cache for location
+        if ($ip === null && $location = $this->getCache()->get($ip)) {
+            if ($location->same($this->remote_ip)) {
+                return $location;
             }
         }
-
-        // Set location
-        $location = $this->default_location;
 
         // If IP not set, user remote IP
         $ip = $ip ?: $this->remote_ip;
@@ -152,12 +144,14 @@ class GeoIP
                 $location = $this->getService()->locate($ip);
 
                 // Set currency if not already set by the service
-                if (isset($location['currency']) === false) {
-                    $location['currency'] = $this->getCurrency($location['iso_code']);
+                if (!$location->currency) {
+                    $location->currency = $this->getCurrency($location->iso_code);
                 }
 
                 // Set default
-                $location['default'] = false;
+                $location->default = false;
+
+                return $location;
             }
             catch (\Exception $e) {
                 if ($this->config('log_failures', true) === true) {
@@ -168,7 +162,7 @@ class GeoIP
             }
         }
 
-        return $location;
+        return $this->getService()->hydrate($this->default_location);
     }
 
     /**
@@ -191,17 +185,38 @@ class GeoIP
     public function getService()
     {
         if ($this->service === null) {
-            // Get driver configuration
+            // Get service configuration
             $config = $this->config('services.' . $this->config('service'), []);
 
-            // Get driver class
-            $driver = Arr::pull($config, 'class');
+            // Get service class
+            $class = Arr::pull($config, 'class');
 
-            // Create driver instance
-            $this->service = app($driver, [$config]);
+            // Create service instance
+            $this->service = app($class, [$config]);
         }
 
         return $this->service;
+    }
+
+    /**
+     * Get cache driver instance.
+     *
+     * @return \Torann\GeoIP\Contracts\CacheInterface
+     */
+    public function getCache()
+    {
+        if ($this->cache === null) {
+            // Get cache driver configuration
+            $config = $this->config('cache_drivers.' . $this->config('cache'), []);
+
+            // Get cache driver class
+            $class = Arr::pull($config, 'class');
+
+            // Create cache driver instance
+            $this->cache = app($class, [$config]);
+        }
+
+        return $this->cache;
     }
 
     /**

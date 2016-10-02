@@ -3,31 +3,9 @@
 namespace Torann\GeoIP;
 
 use Illuminate\Support\ServiceProvider;
-use Torann\GeoIP\Console\UpdateCommand;
 
 class GeoIPServiceProvider extends ServiceProvider
 {
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = false;
-
-    /**
-     * Bootstrap the application events.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        if ($this->isLumen() === false) {
-            $this->publishes([
-                __DIR__ . '/config/geoip.php' => config_path('geoip.php'),
-            ], 'config');
-        }
-    }
-
     /**
      * Register the service provider.
      *
@@ -35,18 +13,51 @@ class GeoIPServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app['geoip'] = $this->app->share(function ($app) {
-            return new GeoIP(
-                $app->config->get('geoip', []),
-                $app['session.store']
-            );
-        });
+        $this->registerGeoIpService();
 
-        $this->app['command.geoip.update'] = $this->app->share(function ($app) {
-            return new UpdateCommand($app['geoip']);
-        });
+        if ($this->app->runningInConsole()) {
+            $this->registerResources();
+            $this->registerGeoIpCommands();
+        }
+    }
 
-        $this->commands(['command.geoip.update']);
+    /**
+     * Register currency provider.
+     *
+     * @return void
+     */
+    public function registerGeoIpService()
+    {
+        $this->app->singleton('geoip', function ($app) {
+            return new GeoIP($app->config->get('geoip', []));
+        });
+    }
+
+    /**
+     * Register currency resources.
+     *
+     * @return void
+     */
+    public function registerResources()
+    {
+        if ($this->isLumen() === false) {
+            $this->publishes([
+                __DIR__ . '/../config/geoip.php' => config_path('geoip.php'),
+            ], 'config');
+        }
+    }
+
+    /**
+     * Register currency commands.
+     *
+     * @return void
+     */
+    public function registerGeoIpCommands()
+    {
+        $this->commands([
+            Console\Update::class,
+            Console\Clear::class,
+        ]);
     }
 
     /**

@@ -1,13 +1,12 @@
 <?php
 
-namespace Torann\GeoIP\Services;
+namespace Torann\GeoIP\Cache;
 
-use Torann\GeoIP\GeoIP;
 use Torann\GeoIP\Location;
 use Illuminate\Support\Arr;
-use Torann\GeoIP\Contracts\ServiceInterface;
+use Torann\GeoIP\Contracts\CacheInterface;
 
-abstract class AbstractService implements ServiceInterface
+abstract class AbstractCache implements CacheInterface
 {
     /**
      * Driver config
@@ -39,11 +38,17 @@ abstract class AbstractService implements ServiceInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Create a location instance from the provided attributes.
+     *
+     * @param array $attributes
+     *
+     * @return Location
      */
-    public function hydrate(array $attributes = [])
+    public function hydrate($attributes = [])
     {
-        return new Location($attributes);
+        return is_array($attributes)
+            ? new Location($attributes)
+            : null;
     }
 
     /**
