@@ -1,102 +1,40 @@
 # GeoIP for Laravel 5
 
-[![Latest Stable Version](https://poser.pugx.org/torann/geoip/v/stable.png)](https://packagist.org/packages/torann/geoip) [![Total Downloads](https://poser.pugx.org/torann/geoip/downloads.png)](https://packagist.org/packages/torann/geoip)
+[![Latest Stable Version](https://poser.pugx.org/torann/geoip/v/stable.png)](https://packagist.org/packages/torann/geoip)
+[![Total Downloads](https://poser.pugx.org/torann/geoip/downloads.png)](https://packagist.org/packages/torann/geoip)
+[![Patreon donate button](https://img.shields.io/badge/patreon-donate-yellow.svg)](https://www.patreon.com/torann)
+[![Donate weekly to this project using Gratipay](https://img.shields.io/badge/gratipay-donate-yellow.svg)](https://gratipay.com/~torann)
+[![Donate to this project using Flattr](https://img.shields.io/badge/flattr-donate-yellow.svg)](https://flattr.com/profile/torann)
+[![Donate to this project using Paypal](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4CJA2A97NPYVU)
 
-Determine the geographical location of website visitors based on their IP addresses. [Homepage](http://lyften.com/projects/laravel-geoip/)
-
-----------
-
-## Installation
+Determine the geographical location and currency of website visitors based on their IP addresses.
 
 - [GeoIP for Laravel 5 on Packagist](https://packagist.org/packages/torann/geoip)
 - [GeoIP for Laravel 5 on GitHub](https://github.com/Torann/laravel-geoip)
-- [Laravel 4 Installation](https://github.com/Torann/laravel-geoip/tree/0.1.1)
+- [Upgrade Guides](http://lyften.com/projects/laravel-geoip/doc/upgrade.html)
 
-To get the latest version of GeoIP simply require it in your `composer.json` file.
+## Official Documentation
 
-~~~
-"torann/geoip": "0.2.*@dev"
-~~~
+Documentation for the package can be found on [Lyften.com](http://lyften.com/projects/laravel-geoip/).
 
-You'll then need to run `composer install` to download it and have the autoloader updated.
+## Laravel 4
 
-Once GeoIP is installed you need to register the service provider with the application. Open up `config/app.php` and find the `providers` key.
-
-~~~php
-'providers' => array(
-
-    'Torann\GeoIP\GeoIPServiceProvider',
-
-)
-~~~
-
-GeoIP also ships with a facade which provides the static syntax for creating collections. You can register the facade in the `aliases` key of your `config/app.php` file.
-
-~~~php
-'aliases' => array(
-
-    'GeoIP' => 'Torann\GeoIP\GeoIPFacade',
-
-)
-~~~
-
-### Publish the configurations
-
-Run this on the command line from the root of your project:
-
-~~~
-$ php artisan vendor:publish
-~~~
-
-A configuration file will be publish to `config/geoip.php`
-
-### Update max mind cities database
-
-~~~
-$ php artisan geoip:update
-~~~
-
-**Database Service**: To use the database version of [MaxMind](http://www.maxmind.com) services download the `GeoLite2-City.mmdb` from [http://dev.maxmind.com/geoip/geoip2/geolite2/](http://dev.maxmind.com/geoip/geoip2/geolite2/) and extract it to `storage/app/geoip.mmdb`. And that's it.
-
-## Usage
-
-Get the location data for a website visitor:
-
-```php
-$location = GeoIP::getLocation();
-```
-
-> When an IP is not given the `$_SERVER["REMOTE_ADDR"]` is used.
-
-Getting the location data for a given IP:
-
-```php
-$location = GeoIP::getLocation('232.223.11.11');
-```
-
-### Example Data
-
-```php
-array (
-    "ip"           => "232.223.11.11",
-    "isoCode"      => "US",
-    "country"      => "United States",
-    "city"         => "New Haven",
-    "state"        => "CT",
-    "postal_code"  => "06510",
-    "lat"          => 41.28,
-    "lon"          => -72.88,
-    "timezone"     => "America/New_York",
-    "continent"    => "NA",
-    "default"      => false
-);
-```
-
-#### Default Location
-
-In the case that a location is not found the fallback location will be returned with the `default` parameter set to `true`. To set your own default change it in the configurations `config/geoip.php`
+For Laravel 4 Installation see [version 0.1.1](https://github.com/Torann/laravel-geoip/tree/0.1.1)
 
 ## Change Log
+
+#### v1.0.0
+
+- Major code refactoring and cleanup
+- Add currency support
+- Add Location object
+- Add cache drivers
+- Add `state_name` to `$location` array #46
+- Set locales in config #45
+- Raise PHP requirement to 5.5
+- Fix file structure to adher to PSR-4 file structure. #40
+- Support custom Geo IP services
+  - Added ip-api.com service (Thanks to [nikkiii](https://github.com/nikkiii))
 
 #### v0.2.1
 
@@ -113,3 +51,13 @@ In the case that a location is not found the fallback location will be returned 
 - Log address not found exceptions
 - Supports a custom default location
 
+## Contributions
+
+Many people have contributed to project since its inception.
+
+Thanks to:
+
+- [nikkiii](https://github.com/nikkiii)
+- [jeffhennis](https://github.com/jeffhennis)
+- [max-kovpak](https://github.com/max-kovpak)
+- [dotpack](https://github.com/dotpack)
