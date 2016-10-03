@@ -73,6 +73,7 @@ class MaxMindDatabase extends AbstractService
 
         // Get header response
         $headers = get_headers($url);
+
         if (substr($headers[0], 9, 3) != '200') {
             throw new Exception('Unable to download database. ('. substr($headers[0], 13) .')');
         }

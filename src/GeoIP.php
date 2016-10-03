@@ -5,6 +5,7 @@ namespace Torann\GeoIP;
 use Exception;
 use Monolog\Logger;
 use Illuminate\Support\Arr;
+use Illuminate\Cache\CacheManager;
 use Monolog\Handler\StreamHandler;
 
 class GeoIP
@@ -45,9 +46,9 @@ class GeoIP
     protected $service;
 
     /**
-     * GeoIP cache instance.
+     * Cache manager instance.
      *
-     * @var Contracts\CacheInterface
+     * @var \Illuminate\Cache\CacheManager
      */
     protected $cache;
 
@@ -70,16 +71,25 @@ class GeoIP
         'continent' => 'NA',
         'currency' => 'USD',
         'default' => true,
+        'cached' => false,
     ];
 
     /**
      * Create a new GeoIP instance.
      *
-     * @param array $config
+     * @param array        $config
+     * @param CacheManager $cache
      */
-    public function __construct(array $config)
+    public function __construct(array $config, CacheManager $cache)
     {
         $this->config = $config;
+
+        // Create caching instance
+        $this->cache = new Cache(
+            $cache,
+            $this->config('cache_tags'),
+            $this->config('cache_expires', 30)
+        );
 
         // Set custom default location
         $this->default_location = array_merge(
@@ -103,8 +113,9 @@ class GeoIP
         // Get location data
         $this->location = $this->find($ip);
 
-        // Save user's location
-        if ($ip === null) {
+        // Should cache location
+        if ($this->shouldCache($ip, $this->location)) {
+            dd('Cache It');
             $this->getCache()->set($ip, $this->location);
         }
 
@@ -122,10 +133,10 @@ class GeoIP
     private function find($ip = null)
     {
         // Check cache for location
-        if ($ip === null && $location = $this->getCache()->get($ip)) {
-            if ($location->same($this->remote_ip)) {
-                return $location;
-            }
+        if ($this->config('cache', 'none') !== 'none' && $location = $this->getCache()->get($ip)) {
+            $location->cached = true;
+dd('Cached!');
+            return $location;
         }
 
         // If IP not set, user remote IP
@@ -197,23 +208,12 @@ class GeoIP
     }
 
     /**
-     * Get cache driver instance.
+     * Get cache instance.
      *
-     * @return \Torann\GeoIP\Contracts\CacheInterface
+     * @return \Torann\GeoIP\Cache
      */
     public function getCache()
     {
-        if ($this->cache === null) {
-            // Get cache driver configuration
-            $config = $this->config('cache_drivers.' . $this->config('cache'), []);
-
-            // Get cache driver class
-            $class = Arr::pull($config, 'class');
-
-            // Create cache driver instance
-            $this->cache = app($class, [$config]);
-        }
-
         return $this->cache;
     }
 
@@ -265,6 +265,30 @@ class GeoIP
         }
 
         return true;
+    }
+
+    /**
+     * Determine if the location should be cached.
+     *
+     * @param string   $ip
+     * @param Location $location
+     *
+     * @return bool
+     */
+    private function shouldCache($ip = null, Location $location)
+    {
+        if ($location->default === true || $location->cached === true) {
+            return false;
+        }
+
+        switch($this->config('cache', 'none')) {
+            case 'all':
+                return true;
+            case 'some' && $ip === null:
+                return true;
+        }
+
+        return false;
     }
 
     /**

@@ -79,40 +79,41 @@ return [
     | Default Cache Driver
     |--------------------------------------------------------------------------
     |
-    | Here you may specify the default cache storage that should be used
-    | by the GeoIP package.
+    | Here you may specify the type of caching that should be used
+    | by the package.
     |
-    | Supported: "sync", "session", "laravel"
+    | Options:
+    |
+    |  all  - All location are cached
+    |  some - Cache only the requesting user
+    |  none - Disable cached
     |
     */
 
-    'cache' => 'sync',
+    'cache' => 'all',
 
     /*
     |--------------------------------------------------------------------------
-    | Cache Driver Specific Configuration
+    | Cache Tags
     |--------------------------------------------------------------------------
     |
-    | Here you may configure as many cache stores as you wish. The base class
-    | name of the driver is used as the driver key.
+    | Cache tags are not supported when using the file or database cache
+    | drivers in Laravel. This is done so that only locations can be cleared.
     |
     */
 
-    'cache_drivers' => [
+    'cache_tags' => ['torann-geoip-location'],
 
-        'sync' => [
-            'class' => \Torann\GeoIP\Cache\Sync::class,
-        ],
+    /*
+    |--------------------------------------------------------------------------
+    | Cache Expiration
+    |--------------------------------------------------------------------------
+    |
+    | Define how long cached location are valid.
+    |
+    */
 
-        'session' => [
-            'class' => \Torann\GeoIP\Cache\Session::class,
-        ],
-
-        'laravel' => [
-            'class' => \Torann\GeoIP\Cache\Laravel::class,
-            'expires' => 60,
-        ],
-    ],
+    'cache_expires' => 30,
 
     /*
     |--------------------------------------------------------------------------
@@ -136,7 +137,7 @@ return [
         'timezone' => 'America/New_York',
         'continent' => 'NA',
         'default' => true,
-        'currency' => null,
+        'currency' => 'USD',
     ],
 
 ];

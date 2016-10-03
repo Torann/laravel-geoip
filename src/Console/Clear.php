@@ -22,18 +22,38 @@ class Clear extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return void
      */
     public function fire()
     {
+        if ($this->isSupported() === false) {
+            return $this->output->error('Default cache system does not support tags');
+        }
+
+        $this->performFlush();
+    }
+
+    /**
+     * Is cache flushing supported.
+     *
+     * @return bool
+     */
+    protected function isSupported()
+    {
+        return empty(app('geoip')->config('cache_tags')) === false
+            && in_array(config('cache.default'), ['file', 'database']) === false;
+    }
+
+    /**
+     * Flush the cache.
+     *
+     * @return void
+     */
+    protected function performFlush()
+    {
         $this->output->write("Clearing cache...");
 
-        if (is_string($result = app('geoip')->getCache()->flush())) {
-            $this->output->writeln('<error>' . ($result ?: 'Failed') . '</error>');
-        }
-        else {
-            $this->output->writeln("<info>success</info>");
-        }
+        app('geoip')->getCache()->flush();
+
+        $this->output->writeln("<info>complete</info>");
     }
 }
