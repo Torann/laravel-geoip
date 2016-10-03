@@ -115,7 +115,6 @@ class GeoIP
 
         // Should cache location
         if ($this->shouldCache($ip, $this->location)) {
-            dd('Cache It');
             $this->getCache()->set($ip, $this->location);
         }
 
@@ -135,7 +134,7 @@ class GeoIP
         // Check cache for location
         if ($this->config('cache', 'none') !== 'none' && $location = $this->getCache()->get($ip)) {
             $location->cached = true;
-dd('Cached!');
+
             return $location;
         }
 

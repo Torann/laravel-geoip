@@ -38,7 +38,7 @@ class Cache
      *
      * @param string $name
      *
-     * @return array
+     * @return Location|null
      */
     public function get($name)
     {

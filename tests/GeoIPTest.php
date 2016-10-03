@@ -2,6 +2,8 @@
 
 namespace Torann\GeoIP\Tests;
 
+use Mockery;
+
 class GeoIPTest extends TestCase
 {
     /**
@@ -37,16 +39,8 @@ class GeoIPTest extends TestCase
      */
     public function testGetCache()
     {
-        $geo_ip = $this->makeGeoIP([
-            'cache' => 'session',
-        ]);
+        $geo_ip = $this->makeGeoIP();
 
-        // Get config values
-        $config = $this->getConfig()['cache_drivers']['session'];
-        unset($config['class']);
-
-        self::$functions->shouldReceive('app')->with('Torann\GeoIP\Cache\Session', [$config])->andReturn(true);
-
-        $this->assertEquals($geo_ip->getCache(), true);
+        $this->assertInstanceOf(\Torann\GeoIP\Cache::class, $geo_ip->getCache());
     }
 }

@@ -19,11 +19,15 @@ class TestCase extends PHPUnit_Framework_TestCase
         Mockery::close();
     }
 
-    protected function makeGeoIP(array $config = [])
+    protected function makeGeoIP(array $config = [], $cacheMock = null)
     {
+        $cacheMock = $cacheMock ?: Mockery::mock('Illuminate\Cache\CacheManager');
+
         $config = array_merge($this->getConfig(), $config);
 
-        return new \Torann\GeoIP\GeoIP($config);
+        $cacheMock->shouldReceive('tags')->with(['torann-geoip-location'])->andReturnSelf();
+
+        return new \Torann\GeoIP\GeoIP($config, $cacheMock);
     }
 
     protected function getConfig()
