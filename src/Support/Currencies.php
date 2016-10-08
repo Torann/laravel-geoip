@@ -132,7 +132,7 @@ return [
     'LK' => 'LKR',
     'LR' => 'LRD',
     'LS' => 'LSL',
-    'LT' => 'LTL',
+    'LT' => 'EUR',
     'LU' => 'EUR',
     'LV' => 'EUR',
     'LY' => 'LYD',
