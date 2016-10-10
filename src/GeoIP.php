@@ -189,6 +189,7 @@ class GeoIP
      * Get service instance.
      *
      * @return \Torann\GeoIP\Contracts\ServiceInterface
+     * @throws Exception
      */
     public function getService()
     {
@@ -198,6 +199,11 @@ class GeoIP
 
             // Get service class
             $class = Arr::pull($config, 'class');
+
+            // Sanity check
+            if ($class === null) {
+                throw new Exception('The GeoIP service is not valid.');
+            }
 
             // Create service instance
             $this->service = app($class, [$config]);
