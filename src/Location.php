@@ -81,7 +81,7 @@ class Location implements ArrayAccess
      */
     public function getDisplayNameAttribute()
     {
-        return "{$this->city}, {$this->state}";
+        return preg_replace('/^,\s/', '', "{$this->city}, {$this->state}");
     }
 
     /**
