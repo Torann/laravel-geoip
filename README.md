@@ -24,6 +24,10 @@ For Laravel 4 Installation see [version 0.1.1](https://github.com/Torann/laravel
 
 ## Change Log
 
+#### v1.0.2
+
+- Support double IP addresses #25
+
 #### v1.0.1
 
 - Fix bug #60
