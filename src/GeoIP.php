@@ -229,26 +229,24 @@ class GeoIP
      */
     public function getClientIP()
     {
-        if ($ip = getenv('HTTP_CLIENT_IP')) {
-            return $ip;
-        }
-        else if ($ip = getenv('HTTP_X_FORWARDED_FOR')) {
-            return $ip;
-        }
-        else if ($ip = getenv('HTTP_X_FORWARDED')) {
-            return $ip;
-        }
-        else if ($ip = getenv('HTTP_FORWARDED_FOR')) {
-            return $ip;
-        }
-        else if ($ip = getenv('HTTP_FORWARDED')) {
-            return $ip;
-        }
-        else if ($ip = getenv('REMOTE_ADDR')) {
-            return $ip;
-        }
-        else if (isset($_SERVER['REMOTE_ADDR'])) {
-            return $_SERVER['REMOTE_ADDR'];
+        $remotes_keys = [
+            'HTTP_X_FORWARDED_FOR',
+            'HTTP_CLIENT_IP',
+            'HTTP_X_FORWARDED',
+            'HTTP_FORWARDED_FOR',
+            'HTTP_FORWARDED',
+            'REMOTE_ADDR',
+            'HTTP_X_CLUSTER_CLIENT_IP',
+        ];
+
+        foreach ($remotes_keys as $key) {
+            if ($address = getenv($key)) {
+                foreach (explode(',', $address) as $ip) {
+                    if ($this->isValid($ip)) {
+                        return $ip;
+                    }
+                }
+            }
         }
 
         return '127.0.0.0';
