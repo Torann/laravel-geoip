@@ -1,19 +1,18 @@
 <?php
 
-if (!function_exists('geoip')) {
+if ( ! function_exists('geoip')) {
     /**
      * Get the location of the provided IP.
      *
-     * @param string $ip
+     * @param  string  $ip
      *
-     * @return \Torann\GeoIP\GeoIP|\Torann\GeoIP\Location
+     * @return \Torann\GeoIP\Contracts\GeoIPInterface|\Torann\GeoIP\Location
      */
     function geoip($ip = null)
     {
-        if (is_null($ip)) {
-            return app('geoip');
-        }
+        /** @var  Torann\GeoIP\Contracts\GeoIPInterface  $geoip */
+        $geoip = app(Torann\GeoIP\Contracts\GeoIPInterface::class);
 
-        return app('geoip')->getLocation($ip);
+        return is_null($ip) ? $geoip : $geoip->getLocation($ip);
     }
 }

@@ -3,6 +3,7 @@
 namespace Torann\GeoIP;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 
 class GeoIPServiceProvider extends ServiceProvider
 {
@@ -13,6 +14,7 @@ class GeoIPServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->registerGeoIpConfig();
         $this->registerGeoIpService();
 
         if ($this->app->runningInConsole()) {
@@ -28,12 +30,13 @@ class GeoIPServiceProvider extends ServiceProvider
      */
     public function registerGeoIpService()
     {
-        $this->app->singleton('geoip', function ($app) {
+        $this->app->singleton(Contracts\GeoIPInterface::class, function ($app) {
             return new GeoIP(
-                $app->config->get('geoip', []),
-                $app['cache']
+                $app['config']->get('geoip', []), $app['cache']
             );
         });
+
+        $this->app->bind('geoip', Contracts\GeoIPInterface::class);
     }
 
     /**
@@ -43,7 +46,7 @@ class GeoIPServiceProvider extends ServiceProvider
      */
     public function registerResources()
     {
-        if ($this->isLumen() === false) {
+        if ( ! $this->isLumen()) {
             $this->publishes([
                 __DIR__ . '/../config/geoip.php' => config_path('geoip.php'),
             ], 'config');
@@ -64,12 +67,32 @@ class GeoIPServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register the GeoIp config.
+     */
+    private function registerGeoIpConfig()
+    {
+        if ( ! $this->isLumen()) {
+            $this->mergeConfigFrom(__DIR__ . '/../config/geoip.php', 'geoip');
+        }
+    }
+
+    /**
      * Check if package is running under Lumen app
      *
      * @return bool
      */
     protected function isLumen()
     {
-        return str_contains($this->app->version(), 'Lumen') === true;
+        return Str::contains($this->app->version(), 'Lumen') === true;
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return [Contracts\GeoIPInterface::class, 'geoip'];
     }
 }
