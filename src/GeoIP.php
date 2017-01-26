@@ -206,7 +206,7 @@ class GeoIP
             }
 
             // Create service instance
-            $this->service = app($class, [$config]);
+            $this->service = new $class($config);
         }
 
         return $this->service;
