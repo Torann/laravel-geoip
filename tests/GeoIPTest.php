@@ -29,9 +29,7 @@ class GeoIPTest extends TestCase
         $config = $this->getConfig()['services']['maxmind_database'];
         unset($config['class']);
 
-        self::$functions->shouldReceive('app')->with('Torann\GeoIP\Services\MaxMindDatabase', [$config])->andReturn(true);
-
-        $this->assertEquals($geo_ip->getService(), true);
+        $this->assertInstanceOf(\Torann\GeoIP\Contracts\ServiceInterface::class, $geo_ip->getService());
     }
 
     /**
