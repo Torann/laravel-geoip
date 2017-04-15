@@ -7,8 +7,9 @@ use Monolog\Logger;
 use Illuminate\Support\Arr;
 use Illuminate\Cache\CacheManager;
 use Monolog\Handler\StreamHandler;
+use Torann\GeoIP\Contracts\GeoIPInterface;
 
-class GeoIP
+class GeoIP implements GeoIPInterface
 {
     /**
      * Illuminate config repository instance.
