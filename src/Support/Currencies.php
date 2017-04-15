@@ -35,7 +35,7 @@ return [
     'BT' => 'BTN',
     'BV' => 'NOK',
     'BW' => 'BWP',
-    'BY' => 'BYR',
+    'BY' => 'BYN',
     'BZ' => 'BZD',
     'CA' => 'CAD',
     'CC' => 'AUD',
