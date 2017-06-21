@@ -51,6 +51,14 @@
   "extra": {
     "branch-alias": {
       "dev-master": "1.0-dev"
+    },
+    "laravel": {
+      "providers": [
+        "Torann\\GeoIP\\GeoIPServiceProvider"
+      ],
+      "aliases": {
+        "GeoIP": "Torann\\GeoIP\\Facades\\GeoIP"
+      }
     }
   }
 }
