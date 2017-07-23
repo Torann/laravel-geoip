@@ -21,7 +21,17 @@ class Clear extends Command
     protected $description = 'Clear GeoIP cached locations.';
 
     /**
+     * Execute the console command for Laravel 5.5 and newer.
+     * @return void
+     */
+    public function handle()
+    {
+        $this->fire();
+    }
+
+    /**
      * Execute the console command.
+     * @return void
      */
     public function fire()
     {
@@ -40,7 +50,7 @@ class Clear extends Command
     protected function isSupported()
     {
         return empty(app('geoip')->config('cache_tags')) === false
-            && in_array(config('cache.default'), ['file', 'database']) === false;
+        && in_array(config('cache.default'), ['file', 'database']) === false;
     }
 
     /**
