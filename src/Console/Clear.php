@@ -23,7 +23,7 @@ class Clear extends Command
     /**
      * Execute the console command.
      */
-    public function fire()
+    public function handle()
     {
         if ($this->isSupported() === false) {
             return $this->output->error('Default cache system does not support tags');

@@ -25,7 +25,7 @@ class Update extends Command
      *
      * @return void
      */
-    public function fire()
+    public function handle()
     {
         // Get default service
         $service = app('geoip')->getService();
