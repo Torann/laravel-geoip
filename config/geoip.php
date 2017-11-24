@@ -70,6 +70,7 @@ return [
             'secure' => true,
             'key' => env('IPAPI_KEY'),
             'continent_path' => storage_path('app/continents.json'),
+            'lang' => 'en',
         ],
 
     ],
