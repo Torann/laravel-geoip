@@ -36,6 +36,7 @@ class IPApi extends AbstractService
             ],
             'query' => [
                 'fields' => 49663,
+                'lang' => $this->config('lang', ['en']),
             ],
         ];
 
