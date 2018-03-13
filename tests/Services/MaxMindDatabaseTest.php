@@ -39,7 +39,7 @@ class MaxMindDatabaseTest extends TestCase
 
         try {
             $location = $service->locate('1.1.1.1');
-            $this->assertEquals($location->default, 'Poop'); // This should never get a chance
+            $this->assertEquals($location->default, false);
         }
         catch (\GeoIp2\Exception\AddressNotFoundException $e) {
             $this->assertEquals($e->getMessage(), 'The address 1.1.1.1 is not in the database.');
@@ -55,7 +55,7 @@ class MaxMindDatabaseTest extends TestCase
 
         $this->assertEquals($service->update(), "Database file ({$config['database_path']}) updated.");
 
-        unlink($config['database_path']);
+        @unlink($config['database_path']);
     }
 
     protected function getService()
