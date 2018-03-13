@@ -1,5 +1,5 @@
 {
-  "name": "osmhub/geoip",
+  "name": "torann/geoip",
   "description": "Support for multiple GeoIP services.",
   "keywords": [
     "laravel",
