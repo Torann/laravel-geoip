@@ -81,6 +81,12 @@ return [
             'lang' => 'en',
         ],
 
+        'ipdata' => [
+            'class'  => \Torann\GeoIP\Services\IPData::class,
+            'key'    => env('IPDATA_API_KEY'),
+            'secure' => true,
+        ],
+
     ],
 
     /*
