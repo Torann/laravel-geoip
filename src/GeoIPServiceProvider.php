@@ -19,6 +19,12 @@ class GeoIPServiceProvider extends ServiceProvider
             $this->registerResources();
             $this->registerGeoIpCommands();
         }
+
+        if ($this->isLumen() === false) {
+            $configPath = __DIR__ . '/../config/geoip.php';
+            $this->mergeConfigFrom($configPath, 'geoip');
+        }
+
     }
 
     /**
