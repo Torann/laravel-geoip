@@ -21,10 +21,8 @@ class GeoIPServiceProvider extends ServiceProvider
         }
 
         if ($this->isLumen() === false) {
-            $configPath = __DIR__ . '/../config/geoip.php';
-            $this->mergeConfigFrom($configPath, 'geoip');
+            $this->mergeConfigFrom(__DIR__ . '/../config/geoip.php', 'geoip');
         }
-
     }
 
     /**
