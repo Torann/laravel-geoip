@@ -3,7 +3,6 @@
 namespace Torann\GeoIP\Services;
 
 use GeoIp2\WebService\Client;
-use GeoIp2\Exception\AddressNotFoundException;
 
 class MaxMindWebService extends AbstractService
 {

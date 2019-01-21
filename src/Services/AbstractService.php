@@ -2,7 +2,6 @@
 
 namespace Torann\GeoIP\Services;
 
-use Torann\GeoIP\GeoIP;
 use Torann\GeoIP\Location;
 use Illuminate\Support\Arr;
 use Torann\GeoIP\Contracts\ServiceInterface;

@@ -23,11 +23,11 @@ class IPGeoLocation extends AbstractService
     public function boot()
     {
         $base = [
-            'base_uri' => 'https://api.ipgeolocation.io/'
+            'base_uri' => 'https://api.ipgeolocation.io/',
         ];
 
         if ($this->config('key')) {
-            $base['base_uri'] = $base['base_uri']."ipgeo?apiKey=". $this->config('key');
+            $base['base_uri'] = "{$base['base_uri']}ipgeo?apiKey=" . $this->config('key');
         }
 
         $this->client = new HttpClient($base);
@@ -48,7 +48,7 @@ class IPGeoLocation extends AbstractService
         }
 
         // Parse body content
-        $json = json_decode($data[0],true);
+        $json = json_decode($data[0], true);
 
         return $this->hydrate($json);
 

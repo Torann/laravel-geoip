@@ -133,7 +133,7 @@ class GeoIP
     {
         // If IP not set, user remote IP
         $ip = $ip ?: $this->remote_ip;
-        
+
         // Check cache for location
         if ($this->config('cache', 'none') !== 'none' && $location = $this->getCache()->get($ip)) {
             $location->cached = true;
@@ -284,7 +284,7 @@ class GeoIP
             return false;
         }
 
-        switch($this->config('cache', 'none')) {
+        switch ($this->config('cache', 'none')) {
             case 'all':
                 return true;
             case 'some' && $ip === null:
