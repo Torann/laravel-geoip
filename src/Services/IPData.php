@@ -3,6 +3,7 @@
 namespace Torann\GeoIP\Services;
 
 use Exception;
+use Illuminate\Support\Arr;
 use Torann\GeoIP\Support\HttpClient;
 
 /**
@@ -47,6 +48,21 @@ class IPData extends AbstractService
             throw new Exception('Request failed (' . $this->client->getErrors() . ')');
         }
 
-        return $this->hydrate(json_decode($data[0], true));
+        $json = json_decode($data[0], true);
+
+        return $this->hydrate([
+            'ip' => $ip,
+            'iso_code' => $json['country_code'],
+            'country' => $json['continent_name'],
+            'city' => $json['city'],
+            'state' => $json['region_code'],
+            'state_name' => $json['region'],
+            'postal_code' => $json['postal'],
+            'lat' => $json['latitude'],
+            'lon' => $json['longitude'],
+            'timezone' => Arr::get($json, 'time_zone.name'),
+            'continent' => Arr::get($json, 'continent_code'),
+            'currency' => Arr::get($json, 'currency.code'),
+        ]);
     }
 }
