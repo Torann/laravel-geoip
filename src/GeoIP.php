@@ -230,6 +230,7 @@ class GeoIP
     public function getClientIP()
     {
         $remotes_keys = [
+            'HTTP_X_FORWARDED_IP',
             'HTTP_X_FORWARDED_FOR',
             'HTTP_CLIENT_IP',
             'HTTP_X_FORWARDED',
