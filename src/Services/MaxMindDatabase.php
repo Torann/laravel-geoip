@@ -62,12 +62,12 @@ class MaxMindDatabase extends AbstractService
      */
     public function update()
     {
-        if ($this->config('database_path', false) === false) {
+         if ($this->config('database_path', false) === false) {
             throw new Exception('Database path not set in config file.');
         }
 
         // Get settings
-        $url = $this->config('update_url');
+        $url = 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz';
         $path = $this->config('database_path');
 
         // Get header response
@@ -78,15 +78,34 @@ class MaxMindDatabase extends AbstractService
         }
 
         // Download zipped database to a system temp file
-        $tmpFile = tempnam(sys_get_temp_dir(), 'maxmind');
+       
+        $tmpFile = storage_path('app/GeoLite2.tar.gz');
         file_put_contents($tmpFile, fopen($url, 'r'));
+        
+        $archive = new \PharData($tmpFile);
+        $archive->decompress(); // decompress app/GeoLite2.tar
+        // unarchive from the tar
+        $phar = new \PharData(storage_path('app/GeoLite2.tar'));
+        $phar->extractTo(storage_path('app/tmp'));  
 
-        // Unzip and save database
-        file_put_contents($path, gzopen($tmpFile, 'r'));
+        
+        copy(glob(storage_path('app/tmp') . "/*/*.mmdb")[0] , $path );
 
         // Remove temp file
-        @unlink($tmpFile);
+        unlink($tmpFile);
+        unlink(storage_path('app/GeoLite2.tar'));
+        $this->removeDirectory(storage_path('app/tmp'));
 
         return "Database file ({$path}) updated.";
+    }
+    
+    public function removeDirectory($path)
+    {
+        $files = glob($path . '/*');
+        foreach ($files as $file) {
+            is_dir($file) ? $this->removeDirectory($file) : unlink($file);
+        }
+        rmdir($path);
+        return;
     }
 }
