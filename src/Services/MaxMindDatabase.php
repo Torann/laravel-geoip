@@ -62,12 +62,12 @@ class MaxMindDatabase extends AbstractService
      */
     public function update()
     {
-         if ($this->config('database_path', false) === false) {
+        if ($this->config('database_path', false) === false) {
             throw new Exception('Database path not set in config file.');
         }
 
         // Get settings
-        $url = 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz';
+        $url = $this->config('update_url');
         $path = $this->config('database_path');
 
         // Get header response
@@ -87,7 +87,7 @@ class MaxMindDatabase extends AbstractService
         // unarchive from the tar
         $phar = new \PharData(storage_path('app/GeoLite2.tar'));
         $phar->extractTo(storage_path('app/tmp'));  
-
+        unset($phar);
         
         copy(glob(storage_path('app/tmp') . "/*/*.mmdb")[0] , $path );
 
@@ -98,7 +98,7 @@ class MaxMindDatabase extends AbstractService
 
         return "Database file ({$path}) updated.";
     }
-    
+
     public function removeDirectory($path)
     {
         $files = glob($path . '/*');
