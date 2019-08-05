@@ -22,6 +22,15 @@ class IPApi extends AbstractService
      */
     protected $continents;
 
+
+    /**
+     * Values to try content.
+     *
+     * @var integer
+     */
+    protected $tries = 3;
+
+
     /**
      * The "booting" method of the service.
      *
@@ -70,8 +79,34 @@ class IPApi extends AbstractService
         // Parse body content
         $json = json_decode($data[0]);
 
+
+        # Has data
+        if(!$json) {
+            $this->tries = $this->tries-1; #2(1) 1(2)
+            if($this->tries < 0) {
+
+                # requests fails, give empty values back
+                return $this->hydrate([
+                    'ip' => $ip,
+                    'iso_code' => null,
+                    'country' => null,
+                    'city' => null,
+                    'state' => null,
+                    'state_name' => null,
+                    'postal_code' => null,
+                    'lat' => null,
+                    'lon' => null,
+                    'timezone' => null,
+                    'continent' => $this->getContinent(null)
+                ]);
+            }
+
+            # try same request again
+            return $this->locate($ip);
+        }
+
         // Verify response status
-        if ($json && $json->status !== 'success') {
+        if ($json->status !== 'success') {
             throw new Exception('Request failed (' . $json->message . ')');
         }
 
