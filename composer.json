@@ -20,8 +20,8 @@
   ],
   "require": {
     "php": "^7.0",
-    "illuminate/support": "~5.0",
-    "illuminate/console": "~5.0",
+    "illuminate/support": "~5.0|^6.0",
+    "illuminate/console": "~5.0|^6.0",
     "vlucas/phpdotenv": "^3.5"
   },
   "suggest": {
