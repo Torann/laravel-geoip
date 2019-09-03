@@ -3,6 +3,7 @@
 namespace Torann\GeoIP;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 
 class GeoIPServiceProvider extends ServiceProvider
 {
@@ -74,6 +75,6 @@ class GeoIPServiceProvider extends ServiceProvider
      */
     protected function isLumen()
     {
-        return str_contains($this->app->version(), 'Lumen') === true;
+        return Str::contains($this->app->version(), 'Lumen') === true;
     }
 }
