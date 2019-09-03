@@ -9,12 +9,12 @@ class TestCase extends PHPUnitTestCase
 {
     public static $functions;
 
-    public function setUp()
+    public function setUp(): void
     {
         self::$functions = Mockery::mock();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Mockery::close();
     }
