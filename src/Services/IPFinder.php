@@ -1,8 +1,11 @@
 <?php
+
 namespace Torann\GeoIP\Services;
+
 use Exception;
 use Illuminate\Support\Arr;
 use Torann\GeoIP\Support\HttpClient;
+
 /**
  * Class GeoIP
  * @package Torann\GeoIP\Services
@@ -15,6 +18,7 @@ class IPFinder extends AbstractService
      * @var HttpClient
      */
     protected $client;
+
     /**
      * The "booting" method of the service.
      *
@@ -32,6 +36,7 @@ class IPFinder extends AbstractService
             ],
         ]);
     }
+
     /**
      * {@inheritdoc}
      * @throws Exception
@@ -40,11 +45,14 @@ class IPFinder extends AbstractService
     {
         // Get data from client
         $data = $this->client->get($ip);
+
         // Verify server response
         if ($this->client->getErrors() !== null || empty($data[0])) {
             throw new Exception('Request failed (' . $this->client->getErrors() . ')');
         }
+
         $json = json_decode($data[0], true);
+
         return $this->hydrate($json);
     }
 }
