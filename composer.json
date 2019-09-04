@@ -19,16 +19,17 @@
     }
   ],
   "require": {
-    "php": "^7.0",
-    "illuminate/support": "~5.0",
-    "illuminate/console": "~5.0"
+    "php": "^7.1",
+    "illuminate/support": "~5.5|^6.0",
+    "illuminate/console": "~5.5|^6.0",
+    "vlucas/phpdotenv": "^3.5"
   },
   "suggest": {
     "geoip2/geoip2": "Required to use the MaxMind database or web service with GeoIP (~2.1).",
     "monolog/monolog": "Allows for storing location not found errors to the log"
   },
   "require-dev": {
-    "phpunit/phpunit": "^4.8",
+    "phpunit/phpunit": "^7.0",
     "mockery/mockery": "^0.9.4",
     "geoip2/geoip2": "~2.1"
   },
