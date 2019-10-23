@@ -161,7 +161,7 @@ class GeoIP
                 if ($this->config('log_failures', true) === true) {
                     $log = new Logger('geoip');
                     $log->pushHandler(new StreamHandler(storage_path('logs/geoip.log'), Logger::ERROR));
-                    $log->addError($e);
+                    $log->error($e);
                 }
             }
         }
