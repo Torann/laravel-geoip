@@ -53,7 +53,7 @@ class IPData extends AbstractService
         return $this->hydrate([
             'ip' => $ip,
             'iso_code' => $json['country_code'],
-            'country' => $json['continent_name'],
+            'country' => $json['country_name'],
             'city' => $json['city'],
             'state' => $json['region_code'],
             'state_name' => $json['region'],
