@@ -46,18 +46,6 @@ class MaxMindDatabaseTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
-    public function shouldUpdateLocalDatabase()
-    {
-        list($service, $config) = $this->getService();
-
-        $this->assertEquals($service->update(), "Database file ({$config['database_path']}) updated.");
-
-        @unlink($config['database_path']);
-    }
-
     protected function getService()
     {
         $config = $this->getConfig()['services']['maxmind_database'];
