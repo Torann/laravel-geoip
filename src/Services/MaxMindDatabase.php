@@ -76,10 +76,6 @@ class MaxMindDatabase extends AbstractService
 
             $file = $this->findDatabaseFile($archive);
 
-            if (is_null($file)) {
-                throw new Exception('Database file could not be found within archive.');
-            }
-
             $relativePath = "{$archive->getFilename()}/{$file->getFilename()}";
 
             $archive->extractTo($directory, $relativePath);
@@ -119,6 +115,7 @@ class MaxMindDatabase extends AbstractService
      *
      * @param  \PharData  $archive
      * @return mixed
+     * @throws \Exception
      */
     protected function findDatabaseFile($archive)
     {
@@ -132,7 +129,7 @@ class MaxMindDatabase extends AbstractService
             }
         }
 
-        return null;
+        throw new Exception('Database file could not be found within archive.');
     }
 
     /**
