@@ -131,6 +131,8 @@ class MaxMindDatabase extends AbstractService
                 return $file;
             }
         }
+
+        return null;
     }
 
     /**
