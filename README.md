@@ -28,6 +28,7 @@ Many people have contributed to project since its inception.
 
 Thanks to:
 
+- [Dwight Watson](https://github.com/dwightwatson)
 - [nikkiii](https://github.com/nikkiii)
 - [jeffhennis](https://github.com/jeffhennis)
 - [max-kovpak](https://github.com/max-kovpak)
