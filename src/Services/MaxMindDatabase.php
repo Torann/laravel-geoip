@@ -2,6 +2,7 @@
 
 namespace Torann\GeoIP\Services;
 
+use PharData;
 use Exception;
 use GeoIp2\Database\Reader;
 
@@ -66,27 +67,97 @@ class MaxMindDatabase extends AbstractService
             throw new Exception('Database path not set in config file.');
         }
 
-        // Get settings
-        $url = $this->config('update_url');
-        $path = $this->config('database_path');
+        $this->withTemporaryDirectory(function ($directory) {
+            $tarFile = sprintf('%s/maxmind.tar.gz', $directory);
 
-        // Get header response
-        $headers = get_headers($url);
+            file_put_contents($tarFile, fopen($this->config('update_url'), 'r'));
 
-        if (substr($headers[0], 9, 3) != '200') {
-            throw new Exception('Unable to download database. (' . substr($headers[0], 13) . ')');
+            $archive = new PharData($tarFile);
+
+            $file = $this->findDatabaseFile($archive);
+
+            $relativePath = "{$archive->getFilename()}/{$file->getFilename()}";
+
+            $archive->extractTo($directory, $relativePath);
+
+            file_put_contents($this->config('database_path'), fopen("{$directory}/{$relativePath}", 'r'));
+        });
+
+        return "Database file ({$this->config('database_path')}) updated.";
+    }
+
+    /**
+     * Provide a temporary directory to perform operations in and and ensure
+     * it is removed afterwards.
+     *
+     * @param  callable  $callback
+     * @return void
+     */
+    protected function withTemporaryDirectory(callable $callback)
+    {
+        $directory = tempnam(sys_get_temp_dir(), 'maxmind');
+
+        if (file_exists($directory)) {
+            unlink($directory);
         }
 
-        // Download zipped database to a system temp file
-        $tmpFile = tempnam(sys_get_temp_dir(), 'maxmind');
-        file_put_contents($tmpFile, fopen($url, 'r'));
+        mkdir($directory);
 
-        // Unzip and save database
-        file_put_contents($path, gzopen($tmpFile, 'r'));
+        try {
+            $callback($directory);
+        } finally {
+            $this->deleteDirectory($directory);
+        }
+    }
 
-        // Remove temp file
-        @unlink($tmpFile);
+    /**
+     * Recursively search the given archive to find the .mmdb file.
+     *
+     * @param  \PharData  $archive
+     * @return mixed
+     * @throws \Exception
+     */
+    protected function findDatabaseFile($archive)
+    {
+        foreach ($archive as $file) {
+            if ($file->isDir()) {
+                return $this->findDatabaseFile(new PharData($file->getPathName()));
+            }
 
-        return "Database file ({$path}) updated.";
+            if (pathinfo($file, PATHINFO_EXTENSION) === 'mmdb') {
+                return $file;
+            }
+        }
+
+        throw new Exception('Database file could not be found within archive.');
+    }
+
+    /**
+     * Recursively delete the given directory.
+     *
+     * @param  string  $directory
+     * @return mixed
+     */
+    protected function deleteDirectory(string $directory)
+    {
+        if (!file_exists($directory)) {
+            return true;
+        }
+
+        if (!is_dir($directory)) {
+            return unlink($directory);
+        }
+
+        foreach (scandir($directory) as $item) {
+            if ($item == '.' || $item == '..') {
+                continue;
+            }
+
+            if (!$this->deleteDirectory($directory . DIRECTORY_SEPARATOR . $item)) {
+                return false;
+            }
+        }
+
+        return rmdir($directory);
     }
 }
