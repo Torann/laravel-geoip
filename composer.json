@@ -3,8 +3,6 @@
   "description": "Support for multiple GeoIP services.",
   "keywords": [
     "laravel",
-    "laravel 6",
-    "laravel 7",
     "geoip",
     "location",
     "geolocation",
