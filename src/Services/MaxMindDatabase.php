@@ -23,13 +23,16 @@ class MaxMindDatabase extends AbstractService
     public function boot()
     {
         $path = $this->config('database_path');
+
         // Copy test database for now
-        if (file_exists($path) === false) {
+        if (is_file($path) === false) {
             mkdir(str_replace('/geoip.mmdb', '', $path));
             copy(__DIR__ . '/../../resources/geoip.mmdb', $path);
         }
 
-        $this->reader = new Reader( $path, $this->config('locales', ['en']));
+        $this->reader = new Reader(
+            $path, $this->config('locales', ['en'])
+        );
     }
 
     /**
@@ -89,7 +92,8 @@ class MaxMindDatabase extends AbstractService
      * Provide a temporary directory to perform operations in and and ensure
      * it is removed afterwards.
      *
-     * @param  callable  $callback
+     * @param callable $callback
+     *
      * @return void
      */
     protected function withTemporaryDirectory(callable $callback)
@@ -112,7 +116,8 @@ class MaxMindDatabase extends AbstractService
     /**
      * Recursively search the given archive to find the .mmdb file.
      *
-     * @param  \PharData  $archive
+     * @param \PharData $archive
+     *
      * @return mixed
      * @throws \Exception
      */
@@ -134,16 +139,17 @@ class MaxMindDatabase extends AbstractService
     /**
      * Recursively delete the given directory.
      *
-     * @param  string  $directory
+     * @param string $directory
+     *
      * @return mixed
      */
     protected function deleteDirectory(string $directory)
     {
-        if (!file_exists($directory)) {
+        if (! file_exists($directory)) {
             return true;
         }
 
-        if (!is_dir($directory)) {
+        if (! is_dir($directory)) {
             return unlink($directory);
         }
 
@@ -152,7 +158,7 @@ class MaxMindDatabase extends AbstractService
                 continue;
             }
 
-            if (!$this->deleteDirectory($directory . DIRECTORY_SEPARATOR . $item)) {
+            if (! $this->deleteDirectory($directory . DIRECTORY_SEPARATOR . $item)) {
                 return false;
             }
         }
