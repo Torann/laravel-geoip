@@ -18,8 +18,12 @@ class CacheTest extends TestCase
             'lon' => -72.92,
         ];
 
-        $cacheMock = Mockery::mock('Illuminate\Cache\CacheManager');
-        $cacheMock->shouldReceive('get')->with($data['ip'])->andReturn($data);
+        $cacheMock = Mockery::mock('Illuminate\Cache\CacheManager')
+            ->shouldAllowMockingProtectedMethods();
+
+        $cacheMock->shouldReceive('get')
+            ->with($data['ip'])
+            ->andReturn($data);
 
         $geo_ip = $this->makeGeoIP([], $cacheMock);
 
@@ -35,12 +39,18 @@ class CacheTest extends TestCase
      */
     public function shouldReturnInvalidLocation()
     {
-        $cacheMock = Mockery::mock('Illuminate\Cache\CacheManager');
+        $cacheMock = Mockery::mock('Illuminate\Cache\CacheManager')
+            ->shouldAllowMockingProtectedMethods();
 
         $geo_ip = $this->makeGeoIP([], $cacheMock);
 
-        $cacheMock->shouldReceive('get')->with('81.2.69.142')->andReturn(null);
-        $cacheMock->shouldReceive('tags')->with($geo_ip->config('cache_tags'))->andReturnSelf();
+        $cacheMock->shouldReceive('get')
+            ->with('81.2.69.142')
+            ->andReturn(null);
+
+        $cacheMock->shouldReceive('tags')
+            ->with($geo_ip->config('cache_tags'))
+            ->andReturnSelf();
 
         $this->assertEquals($geo_ip->getCache()->get('81.2.69.142'), null);
     }
@@ -57,12 +67,18 @@ class CacheTest extends TestCase
             'lon' => -72.92,
         ]);
 
-        $cacheMock = Mockery::mock('Illuminate\Cache\CacheManager');
+        $cacheMock = Mockery::mock('Illuminate\Cache\CacheManager')
+            ->shouldAllowMockingProtectedMethods();
 
         $geo_ip = $this->makeGeoIP([], $cacheMock);
 
-        $cacheMock->shouldReceive('put')->withArgs(['81.2.69.142', $location->toArray(), $geo_ip->config('cache_expires')])->andReturn(null);
-        $cacheMock->shouldReceive('tags')->with($geo_ip->config('cache_tags'))->andReturnSelf();
+        $cacheMock->shouldReceive('put')
+            ->withArgs(['81.2.69.142', $location->toArray(), $geo_ip->config('cache_expires')])
+            ->andReturn(null);
+
+        $cacheMock->shouldReceive('tags')
+            ->with($geo_ip->config('cache_tags'))
+            ->andReturnSelf();
 
         $this->assertEquals($geo_ip->getCache()->set('81.2.69.142', $location), null);
     }
@@ -72,12 +88,17 @@ class CacheTest extends TestCase
      */
     public function shouldFlushLocations()
     {
-        $cacheMock = Mockery::mock('Illuminate\Cache\CacheManager');
+        $cacheMock = Mockery::mock('Illuminate\Cache\CacheManager')
+            ->shouldAllowMockingProtectedMethods();
 
         $geo_ip = $this->makeGeoIP([], $cacheMock);
 
-        $cacheMock->shouldReceive('flush')->andReturn(true);
-        $cacheMock->shouldReceive('tags')->with($geo_ip->config('cache_tags'))->andReturnSelf();
+        $cacheMock->shouldReceive('flush')
+            ->andReturn(true);
+
+        $cacheMock->shouldReceive('tags')
+            ->with($geo_ip->config('cache_tags'))
+            ->andReturnSelf();
 
         $this->assertEquals($geo_ip->getCache()->flush(), true);
     }
