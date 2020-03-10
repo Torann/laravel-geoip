@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<ruleset name="PSR2-package">
+    <description>The PSR2 standard</description>
+
+    <!-- use preg_match https://github.com/squizlabs/PHP_CodeSniffer/issues/742#issuecomment-215250517 -->
+    <exclude-pattern>/resources/</exclude-pattern>
+    <exclude-pattern>/vendor/</exclude-pattern>
+    <exclude-pattern>/_[a-zA-Z0-9\._]+\.php</exclude-pattern>
+    <exclude-pattern>/\.[a-zA-Z0-9\._]+\.php</exclude-pattern>
+    <exclude-pattern>\.git</exclude-pattern>
+
+    <!-- Include the whole PSR2 standard -->
+    <rule ref="PSR2">
+        <exclude name="PSR1.Methods.CamelCapsMethodName"/>
+        <exclude name="PSR2.Files.EndFileNewline"/>
+        <exclude name="PSR2.Methods.FunctionCallSignature.MultipleArguments"/>
+        <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace"/>
+    </rule>
+
+    <!-- Lines can be longer -->
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="9999"/>
+        </properties>
+    </rule>
+</ruleset>

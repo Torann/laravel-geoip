@@ -9,4 +9,7 @@ before_script:
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev
 
-script: php ./vendor/bin/phpunit
+script:
+  - ./vendor/bin/phpunit
+  - ./vendor/bin/phpcs --standard=phpcs.xml src
+  - ./vendor/bin/phpstan --level=0 --no-progress analyse src

@@ -1,0 +1,10 @@
+parameters:
+    excludes_analyse:
+        - vendor
+        - resources
+    ignoreErrors:
+        - '#Function config_path not found#'
+        - '#Function config not found#'
+        - '#Instantiated class Monolog\\Logger not found#'
+        - '#Instantiated class Monolog\\Handler\\StreamHandler not found#'
+        - '#Access to constant ERROR on an unknown class Monolog\\Logger#'
