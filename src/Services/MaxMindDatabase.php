@@ -26,7 +26,8 @@ class MaxMindDatabase extends AbstractService
 
         // Copy test database for now
         if (is_file($path) === false) {
-            mkdir(str_replace('/geoip.mmdb', '', $path));
+            @mkdir(dirname($path));
+
             copy(__DIR__ . '/../../resources/geoip.mmdb', $path);
         }
 
