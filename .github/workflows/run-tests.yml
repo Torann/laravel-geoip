@@ -1,0 +1,40 @@
+name: Tests
+
+on:
+    push:
+    pull_request:
+
+jobs:
+    tests:
+        runs-on: ${{ matrix.os }}
+        strategy:
+            fail-fast: false
+            matrix:
+                php: [7.3, 7.4]
+                os: [ubuntu-latest]
+
+        name: PHP${{ matrix.php }} on ${{ matrix.os }}
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: Setup PHP Action
+              uses: shivammathur/setup-php@2.6.0
+              with:
+                php-version: ${{ matrix.php }}
+                tools: phpunit, composer
+
+            - name: Validate composer files
+              run: composer validate
+
+            - name: Cache dependencies
+              uses: actions/cache@v1
+              with:
+                path: ~/.composer/cache/files
+                key: dependencies-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
+
+            - name: Install dependencies
+              run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+
+            - name: Run tests
+              run: phpunit
