@@ -33,7 +33,7 @@ class GeoIPServiceProvider extends ServiceProvider
      */
     public function registerGeoIpService()
     {
-        $this->app->singleton('geoip', function ($app) {
+        $this->app->singleton(GeoIP::class, function ($app) {
             return new GeoIP(
                 $app->config->get('geoip', []),
                 $app['cache']
