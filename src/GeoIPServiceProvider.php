@@ -2,10 +2,11 @@
 
 namespace Torann\GeoIP;
 
-use Illuminate\Support\Str;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 
-class GeoIPServiceProvider extends ServiceProvider
+class GeoIPServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Register the service provider.
@@ -39,6 +40,16 @@ class GeoIPServiceProvider extends ServiceProvider
                 $app['cache']
             );
         });
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return [GeoIP::class];
     }
 
     /**

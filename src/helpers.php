@@ -1,6 +1,8 @@
 <?php
 
-if (!function_exists('geoip')) {
+use Torann\GeoIP\GeoIP;
+
+if (!function_exists(GeoIP::class)) {
     /**
      * Get the location of the provided IP.
      *
@@ -11,9 +13,9 @@ if (!function_exists('geoip')) {
     function geoip($ip = null)
     {
         if (is_null($ip)) {
-            return app('geoip');
+            return app(GeoIP::class);
         }
 
-        return app('geoip')->getLocation($ip);
+        return app(GeoIP::class)->getLocation($ip);
     }
 }

@@ -3,6 +3,7 @@
 namespace Torann\GeoIP\Console;
 
 use Illuminate\Console\Command;
+use Torann\GeoIP\GeoIP;
 
 class Update extends Command
 {
@@ -38,7 +39,7 @@ class Update extends Command
     public function fire()
     {
         // Get default service
-        $service = app('geoip')->getService();
+        $service = app(GeoIP::class)->getService();
 
         // Ensure the selected service supports updating
         if (method_exists($service, 'update') === false) {

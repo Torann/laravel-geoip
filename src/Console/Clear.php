@@ -3,6 +3,7 @@
 namespace Torann\GeoIP\Console;
 
 use Illuminate\Console\Command;
+use Torann\GeoIP\GeoIP;
 
 class Clear extends Command
 {
@@ -51,7 +52,7 @@ class Clear extends Command
      */
     protected function isSupported()
     {
-        return empty(app('geoip')->config('cache_tags')) === false
+        return empty(app(GeoIP::class)->config('cache_tags')) === false
             && in_array(config('cache.default'), ['file', 'database']) === false;
     }
 
@@ -64,7 +65,7 @@ class Clear extends Command
     {
         $this->output->write("Clearing cache...");
 
-        app('geoip')->getCache()->flush();
+        app(GeoIP::class)->getCache()->flush();
 
         $this->output->writeln("<info>complete</info>");
     }
