@@ -73,7 +73,7 @@ class MaxMindDatabase extends AbstractService
         $this->withTemporaryDirectory(function ($directory) {
             $tarFile = sprintf('%s/maxmind.tar.gz', $directory);
 
-            file_put_contents($tarFile, fopen($this->config('update_url'), 'r'));
+            @file_put_contents($tarFile, fopen($this->config('update_url'), 'r'));
 
             $archive = new PharData($tarFile);
 
