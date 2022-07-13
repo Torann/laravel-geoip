@@ -51,6 +51,7 @@ class MaxMindDatabase extends AbstractService
             'state' => $record->mostSpecificSubdivision->isoCode,
             'state_name' => $record->mostSpecificSubdivision->name,
             'postal_code' => $record->postal->code,
+            'is_in_european_union' => $record->country->isInEuropeanUnion,
             'lat' => $record->location->latitude,
             'lon' => $record->location->longitude,
             'timezone' => $record->location->timeZone,

@@ -65,6 +65,7 @@ class GeoIP
         'state' => 'CT',
         'state_name' => 'Connecticut',
         'postal_code' => '06510',
+        'is_in_european_union' => false,
         'lat' => 41.31,
         'lon' => -72.92,
         'timezone' => 'America/New_York',
