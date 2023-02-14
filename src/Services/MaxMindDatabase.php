@@ -5,6 +5,7 @@ namespace Torann\GeoIP\Services;
 use PharData;
 use Exception;
 use GeoIp2\Database\Reader;
+use Illuminate\Support\Facades\Storage;
 
 class MaxMindDatabase extends AbstractService
 {
@@ -83,7 +84,7 @@ class MaxMindDatabase extends AbstractService
 
             $archive->extractTo($directory, $relativePath);
 
-            file_put_contents($this->config('database_path'), fopen("{$directory}/{$relativePath}", 'r'));
+            Storage::put($this->config('database_path'), fopen("{$directory}/{$relativePath}", 'r'));
         });
 
         return "Database file ({$this->config('database_path')}) updated.";
