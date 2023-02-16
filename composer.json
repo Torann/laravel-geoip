@@ -19,9 +19,9 @@
   ],
   "require": {
     "php": "^8.0",
-    "illuminate/cache": "^8.0|^9.0",
-    "illuminate/console": "^8.0|^9.0",
-    "illuminate/support": "^8.0|^9.0"
+    "illuminate/cache": "^8.0|^9.0|^10.0",
+    "illuminate/console": "^8.0|^9.0|^10.0",
+    "illuminate/support": "^8.0|^9.0|^10.0"
   },
   "suggest": {
     "geoip2/geoip2": "Required to use the MaxMind database or web service with GeoIP (~2.1).",
