@@ -28,7 +28,7 @@
     "monolog/monolog": "Allows for storing location not found errors to the log"
   },
   "require-dev": {
-    "phpunit/phpunit": "^8.0|^9.0",
+    "phpunit/phpunit": "^8.0|^9.0|^10.0",
     "mockery/mockery": "^1.3",
     "geoip2/geoip2": "~2.1",
     "vlucas/phpdotenv": "^5.0",
