@@ -279,7 +279,7 @@ class GeoIP
      *
      * @return bool
      */
-    private function shouldCache($ip = null, Location $location)
+    private function shouldCache($ip, Location $location)
     {
         if ($location->default === true || $location->cached === true) {
             return false;
