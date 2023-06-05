@@ -34,7 +34,8 @@ return [
     | Here you may specify the default storage driver that should be used
     | by the framework.
     |
-    | Supported: "maxmind_database", "maxmind_api", "ipapi"
+    | Supported: "maxmind_database", "maxmind_api", "ipapi", "ipgeolocation",
+    |   "ipdata", "ipfinder", "apibundle"
     |
     */
 
@@ -92,6 +93,13 @@ return [
             'key'    => env('IPFINDER_API_KEY'),
             'secure' => true,
             'locales' => ['en'],
+        ],
+
+        'apibundle' => [
+            'class'  => \Torann\GeoIP\Services\ApiBundle::class,
+            'key'    => env('APIBUNDLE_API_KEY'),
+            'secure' => true,
+            'lang' => 'en',
         ],
 
     ],
