@@ -63,6 +63,7 @@ class IPData extends AbstractService
             'timezone' => Arr::get($json, 'time_zone.name'),
             'continent' => Arr::get($json, 'continent_code'),
             'currency' => Arr::get($json, 'currency.code'),
+            'raw' => $json,
         ]);
     }
 }
