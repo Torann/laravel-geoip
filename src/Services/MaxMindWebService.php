@@ -2,7 +2,9 @@
 
 namespace Torann\GeoIP\Services;
 
+use GeoIp2\Model\City;
 use GeoIp2\WebService\Client;
+use Illuminate\Support\Arr;
 
 class MaxMindWebService extends AbstractService
 {
@@ -46,6 +48,26 @@ class MaxMindWebService extends AbstractService
             'lon' => $record->location->longitude,
             'timezone' => $record->location->timeZone,
             'continent' => $record->continent->code,
+            'localizations' => $this->getLocallizations($record),
         ]);
+    }
+
+    /**
+     * Get localized country name, state name and city name based on config languages
+     *
+     * @param City $record
+     * @return array
+     */
+    private function getLocallizations(City $record)
+    {
+        $locales = [];
+
+        foreach ($this->config('locales') as $lang) {
+            $locales[$lang]['country'] = Arr::get($record->country->names, $lang);
+            $locales[$lang]['state_name'] = Arr::get($record->mostSpecificSubdivision->names, $lang);
+            $locales[$lang]['city'] = Arr::get($record->city->names, $lang);
+        }
+
+        return $locales;
     }
 }
