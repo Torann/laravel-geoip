@@ -48,7 +48,7 @@ class MaxMindWebService extends AbstractService
             'lon' => $record->location->longitude,
             'timezone' => $record->location->timeZone,
             'continent' => $record->continent->code,
-            'localizations' => $this->getLocallizations($record),
+            'localizations' => $this->getLocalizations($record),
         ]);
     }
 
@@ -58,7 +58,7 @@ class MaxMindWebService extends AbstractService
      * @param City $record
      * @return array
      */
-    private function getLocallizations(City $record)
+    private function getLocalizations(City $record): array
     {
         $localizations = [];
 
