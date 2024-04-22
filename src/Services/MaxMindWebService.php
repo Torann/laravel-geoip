@@ -46,6 +46,7 @@ class MaxMindWebService extends AbstractService
             'lon' => $record->location->longitude,
             'timezone' => $record->location->timeZone,
             'continent' => $record->continent->code,
+            'raw' => $record,
         ]);
     }
 }

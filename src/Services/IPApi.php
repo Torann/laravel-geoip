@@ -35,7 +35,7 @@ class IPApi extends AbstractService
                 'User-Agent' => 'Laravel-GeoIP',
             ],
             'query' => [
-                'fields' => 49663,
+                'fields' => $this->config('fields', 49663),
                 'lang' => $this->config('lang', ['en']),
             ],
         ];
@@ -87,6 +87,7 @@ class IPApi extends AbstractService
             'lon' => $json->lon,
             'timezone' => $json->timezone,
             'continent' => $this->getContinent($json->countryCode),
+            'raw' => $json,
         ]);
     }
 

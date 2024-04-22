@@ -21,6 +21,7 @@ use Illuminate\Support\Arr;
  * @property string|null $timezone
  * @property string|null $continent
  * @property string|null $currency
+ * @property object|null $raw
  * @property bool $default
  * @property bool $cached
  *
