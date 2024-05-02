@@ -53,7 +53,7 @@ class IPInfo extends AbstractService
         return $this->hydrate([
             'ip' => $ip,
             'iso_code' => $json['country'],
-            'country' => $json['country'],
+            'country' => $this->get_country_name($json['country']),
             'city' => $json['city'],
             'state' => $json['region'],
             'state_name' => $json['region'],
@@ -62,4 +62,12 @@ class IPInfo extends AbstractService
             'continent' => $json['continent'] ?? explode('/',$json['timezone'])[0] ?? '',
         ]);
     }
+
+	public function get_country_name($country_code)
+	{
+		$url = 'https://restcountries.com/v3.1/alpha/' . $country_code;
+		$country_data = @json_decode(@file_get_contents($url));
+
+		return $country_data[0]->name->common ?? $country_code;
+	}
 }
