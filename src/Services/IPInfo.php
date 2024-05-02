@@ -68,6 +68,6 @@ class IPInfo extends AbstractService
 		$url = 'https://restcountries.com/v3.1/alpha/' . $country_code;
 		$country_data = @json_decode(@file_get_contents($url));
 
-		return $country_data[0]->name->common ?? $country_code;
+		return $country_data[0]?->name?->common ?? $country_code;
 	}
 }
