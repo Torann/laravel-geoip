@@ -1,11 +1,8 @@
 # GeoIP for Laravel
 
-[![Build Status](https://travis-ci.org/Torann/laravel-geoip.svg?branch=master)](https://travis-ci.org/Torann/laravel-geoip)
-[![Latest Stable Version](https://poser.pugx.org/torann/geoip/v/stable.png)](https://packagist.org/packages/torann/geoip)
-[![Total Downloads](https://poser.pugx.org/torann/geoip/downloads.png)](https://packagist.org/packages/torann/geoip)
+[![Latest Stable Version](https://poser.pugx.org/torann/geoip/v/stable)](https://packagist.org/packages/torann/geoip)
+[![Total Downloads](https://poser.pugx.org/torann/geoip/downloads)](https://packagist.org/packages/torann/geoip)
 [![Patreon donate button](https://img.shields.io/badge/patreon-donate-yellow.svg)](https://www.patreon.com/torann)
-[![Donate weekly to this project using Gratipay](https://img.shields.io/badge/gratipay-donate-yellow.svg)](https://gratipay.com/~torann)
-[![Donate to this project using Flattr](https://img.shields.io/badge/flattr-donate-yellow.svg)](https://flattr.com/profile/torann)
 [![Donate to this project using Paypal](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4CJA2A97NPYVU)
 
 Determine the geographical location and currency of website visitors based on their IP addresses.
@@ -14,14 +11,15 @@ Determine the geographical location and currency of website visitors based on th
 - [GeoIP for Laravel on GitHub](https://github.com/Torann/laravel-geoip)
 - [Upgrade Guides](http://lyften.com/projects/laravel-geoip/doc/upgrade.html)
 
+## v3.0.8 Possible Breaking Change
+
+Out of the box the system no longer comes with a service pre-configured. Which will cause an error for those who did **NOT** previously publish the configurtion file. Follow the [getting started guide](https://lyften.com/projects/laravel-geoip/doc/) on how to publish the config and how to set up a service. 
+
+Sorry for this inconvenience, but MaxMind made me remove the free service that was the default. If the config file was published prior to this change, you should not been affected.
+
 ## Official Documentation
 
 Documentation for the package can be found on [Lyften.com](http://lyften.com/projects/laravel-geoip/).
-
-## Older versions of Laravel
-
-- Laravel 5 [version 1.1](https://github.com/Torann/laravel-geoip/tree/1.1)
-- Laravel 4 [version 0.1.1](https://github.com/Torann/laravel-geoip/tree/0.1.1)
 
 ## Contributions
 
