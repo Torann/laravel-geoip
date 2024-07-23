@@ -1,12 +1,12 @@
 {
   "name": "torann/geoip",
-  "description": "Support for multiple GeoIP services.",
+  "description": "Support for multiple Geographical Location services.",
   "keywords": [
     "laravel",
     "geoip",
+    "geographical",
     "location",
     "geolocation",
-    "MaxMind",
     "IP API",
     "infoDB"
   ],
