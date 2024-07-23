@@ -202,7 +202,7 @@ class GeoIP
 
             // Sanity check
             if ($class === null) {
-                throw new Exception('The GeoIP service is not valid.');
+                throw new Exception('No GeoIP service is configured.');
             }
 
             // Create service instance
@@ -237,6 +237,7 @@ class GeoIP
             'HTTP_FORWARDED_FOR',
             'HTTP_FORWARDED',
             'REMOTE_ADDR',
+            'HTTP_X_FORWARDED_IP',
             'HTTP_X_CLUSTER_CLIENT_IP',
         ];
 

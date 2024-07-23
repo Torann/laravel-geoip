@@ -16,13 +16,13 @@ use Illuminate\Support\Arr;
  * @property string|null $state
  * @property string|null $state_name
  * @property string|null $postal_code
- * @property float|null $lat
- * @property float|null $lon
+ * @property float|null  $lat
+ * @property float|null  $lon
  * @property string|null $timezone
  * @property string|null $continent
  * @property string|null $currency
- * @property bool $default
- * @property bool $cached
+ * @property bool        $default
+ * @property bool        $cached
  *
  * @package Torann\GeoIP
  */
@@ -48,7 +48,7 @@ class Location implements ArrayAccess
     /**
      * Determine if the location is for the same IP address.
      *
-     * @param  string $ip
+     * @param string $ip
      *
      * @return bool
      */
@@ -60,8 +60,8 @@ class Location implements ArrayAccess
     /**
      * Set a given attribute on the location.
      *
-     * @param  string $key
-     * @param  mixed  $value
+     * @param string $key
+     * @param mixed  $value
      *
      * @return $this
      */
@@ -75,7 +75,7 @@ class Location implements ArrayAccess
     /**
      * Get an attribute from the $attributes array.
      *
-     * @param  string $key
+     * @param string $key
      *
      * @return mixed
      */
@@ -83,11 +83,11 @@ class Location implements ArrayAccess
     {
         $value = Arr::get($this->attributes, $key);
 
+        $method = 'get' . Str::studly($key) . 'Attribute';
+
         // First we will check for the presence of a mutator for the set operation
         // which simply lets the developers tweak the attribute as it is set.
-        if (method_exists($this, 'get' . Str::studly($key) . 'Attribute')) {
-            $method = 'get' . Str::studly($key) . 'Attribute';
-
+        if (method_exists($this, $method)) {
             return $this->{$method}($value);
         }
 
@@ -127,7 +127,7 @@ class Location implements ArrayAccess
     /**
      * Get the location's attribute
      *
-     * @param  string $key
+     * @param string $key
      *
      * @return mixed
      */
@@ -139,8 +139,8 @@ class Location implements ArrayAccess
     /**
      * Set the location's attribute
      *
-     * @param  string $key
-     * @param  mixed  $value
+     * @param string $key
+     * @param mixed  $value
      */
     public function __set($key, $value)
     {
@@ -150,7 +150,7 @@ class Location implements ArrayAccess
     /**
      * Determine if the given attribute exists.
      *
-     * @param  mixed $offset
+     * @param mixed $offset
      *
      * @return bool
      */
@@ -162,7 +162,7 @@ class Location implements ArrayAccess
     /**
      * Get the value for a given offset.
      *
-     * @param  mixed $offset
+     * @param mixed $offset
      *
      * @return mixed
      */
@@ -174,8 +174,8 @@ class Location implements ArrayAccess
     /**
      * Set the value for a given offset.
      *
-     * @param  mixed $offset
-     * @param  mixed $value
+     * @param mixed $offset
+     * @param mixed $value
      *
      * @return void
      */
@@ -187,7 +187,7 @@ class Location implements ArrayAccess
     /**
      * Unset the value for a given offset.
      *
-     * @param  mixed $offset
+     * @param mixed $offset
      *
      * @return void
      */
@@ -211,7 +211,7 @@ class Location implements ArrayAccess
     /**
      * Unset an attribute on the location.
      *
-     * @param  string $key
+     * @param string $key
      *
      * @return void
      */
