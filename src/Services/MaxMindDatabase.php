@@ -4,7 +4,9 @@ namespace Torann\GeoIP\Services;
 
 use PharData;
 use Exception;
+use GeoIp2\Model\City;
 use GeoIp2\Database\Reader;
+use Illuminate\Support\Arr;
 
 class MaxMindDatabase extends AbstractService
 {
@@ -55,6 +57,7 @@ class MaxMindDatabase extends AbstractService
             'lon' => $record->location->longitude,
             'timezone' => $record->location->timeZone,
             'continent' => $record->continent->code,
+            'localizations' => $this->getLocalizations($record),
         ]);
     }
 
@@ -165,5 +168,24 @@ class MaxMindDatabase extends AbstractService
         }
 
         return rmdir($directory);
+    }
+
+    /**
+     * Get localized country name, state name and city name based on config languages
+     *
+     * @param City $record
+     * @return array
+     */
+    private function getLocalizations(City $record): array
+    {
+        $localizations = [];
+
+        foreach ($this->config('locales', ['en']) as $lang) {
+            $localizations[$lang]['country'] = Arr::get($record->country->names, $lang);
+            $localizations[$lang]['state_name'] = Arr::get($record->mostSpecificSubdivision->names, $lang);
+            $localizations[$lang]['city'] = Arr::get($record->city->names, $lang);
+        }
+
+        return $localizations;
     }
 }
