@@ -8,6 +8,7 @@ use Torann\GeoIP\Support\HttpClient;
 
 /**
  * Class GeoIP
+ *
  * @package Torann\GeoIP\Services
  */
 class IPData extends AbstractService
@@ -36,6 +37,7 @@ class IPData extends AbstractService
 
     /**
      * {@inheritdoc}
+     *
      * @throws Exception
      */
     public function locate($ip)
