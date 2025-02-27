@@ -84,6 +84,12 @@ return [
             'locales' => ['en'],
         ],
 
+        'ipinfo' => [
+            'class'  => \Torann\GeoIP\Services\IPInfo::class,
+            'key'    => env('IPINFO_API_KEY'),
+            'secure' => true,
+        ],
+
     ],
 
     /*
