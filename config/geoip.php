@@ -121,7 +121,7 @@ return [
     | Cache Expiration
     |--------------------------------------------------------------------------
     |
-    | Define how long cached location are valid.
+    | Define how long the cached location is valid (in seconds).
     |
     */
 
