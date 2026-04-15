@@ -84,6 +84,11 @@ return [
             'locales' => ['en'],
         ],
 
+        'ipquery'=> [
+            'class' => \Torann\GeoIP\Services\IPQuery::class,
+            'secure' => true,
+        ]
+
     ],
 
     /*
