@@ -84,6 +84,11 @@ return [
             'locales' => ['en'],
         ],
 
+        'ip2location' => [
+            'class' => \Torann\GeoIP\Services\IP2Location::class,
+            'key' => env('IP2LOCATION_API_KEY'),
+        ],
+
     ],
 
     /*
