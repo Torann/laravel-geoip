@@ -168,6 +168,30 @@ class GeoIP
 
         return $this->getService()->hydrate($this->default_location);
     }
+    
+    /**
+    * Load the currencies in the instance.
+    *
+    * @return void
+    */
+    protected function loadCurrencies()
+    {
+        if ($this->currencies === null && $this->config('include_currency', false)) {
+            $this->currencies = include(__DIR__ . '/Support/Currencies.php');
+        }
+    }
+    
+    /**
+    * Get all currencies.
+    *
+    * @return array
+    */
+    public function getCurrencies()
+    {
+        $this->loadCurrencies();
+        
+        return $this->currencies;
+    }
 
     /**
      * Get the currency code from ISO.
@@ -178,9 +202,7 @@ class GeoIP
      */
     public function getCurrency($iso)
     {
-        if ($this->currencies === null && $this->config('include_currency', false)) {
-            $this->currencies = include(__DIR__ . '/Support/Currencies.php');
-        }
+        $this->loadCurrencies();
 
         return Arr::get($this->currencies, $iso);
     }
