@@ -71,7 +71,7 @@ class IPApi extends AbstractService
         $json = json_decode($data[0]);
 
         // Verify response status
-        if ($json->status !== 'success') {
+        if ($json && $json->status !== 'success') {
             throw new Exception('Request failed (' . $json->message . ')');
         }
 
