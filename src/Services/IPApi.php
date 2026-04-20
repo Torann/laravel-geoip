@@ -71,13 +71,13 @@ class IPApi extends AbstractService
         $json = json_decode($data[0]);
 
         // Verify response status
-        if ($json->status !== 'success') {
+        if ( empty($json->status) && $json->status !== 'success' ) {
             throw new Exception('Request failed (' . $json->message . ')');
         }
 
         return $this->hydrate([
             'ip' => $ip,
-            'iso_code' => $json->countryCode,
+            'iso_code' => !empty($json->countryCode)? $json->countryCode : '',
             'country' => $json->country,
             'city' => $json->city,
             'state' => $json->region,
