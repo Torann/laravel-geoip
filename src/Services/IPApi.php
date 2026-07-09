@@ -48,9 +48,12 @@ class IPApi extends AbstractService
 
         $this->client = new HttpClient($base);
 
+        // Get continents configuration
+        $continentPath = $this->config('continent_path');
+
         // Set continents
-        if (file_exists($this->config('continent_path'))) {
-            $this->continents = json_decode(file_get_contents($this->config('continent_path')), true);
+        if (is_string($continentPath) && file_exists($continentPath)) {
+            $this->continents = json_decode(file_get_contents($continentPath), true);
         }
     }
 
