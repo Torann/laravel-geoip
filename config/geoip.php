@@ -10,9 +10,15 @@ return [
     | Here you may configure the log settings for when a location is not found
     | for the IP provided.
     |
+    | The "log_channel" option sends failures to one of the channels defined
+    | in your "config/logging.php" (e.g. a "daily" channel for rotation).
+    | When null, failures are written to "storage/logs/geoip.log".
+    |
     */
 
     'log_failures' => true,
+
+    'log_channel' => null,
 
     /*
     |--------------------------------------------------------------------------
