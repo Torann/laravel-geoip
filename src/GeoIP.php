@@ -158,15 +158,37 @@ class GeoIP
 
                 return $location;
             } catch (\Exception $e) {
-                if ($this->config('log_failures', true) === true) {
-                    $log = new Logger('geoip');
-                    $log->pushHandler(new StreamHandler(storage_path('logs/geoip.log'), Logger::ERROR));
-                    $log->error($e);
-                }
+                $this->logFailure($e);
             }
         }
 
         return $this->getService()->hydrate($this->default_location);
+    }
+
+    /**
+     * Log a failed location lookup.
+     *
+     * @param \Exception $e
+     *
+     * @return void
+     */
+    private function logFailure(Exception $e)
+    {
+        if ($this->config('log_failures', true) !== true) {
+            return;
+        }
+
+        $channel = $this->config('log_channel');
+
+        if ($channel !== null) {
+            app('log')->channel($channel)->error($e->getMessage(), ['exception' => $e]);
+
+            return;
+        }
+
+        $log = new Logger('geoip');
+        $log->pushHandler(new StreamHandler(storage_path('logs/geoip.log'), Logger::ERROR));
+        $log->error($e);
     }
 
     /**
