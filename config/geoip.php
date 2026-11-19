@@ -84,6 +84,11 @@ return [
             'locales' => ['en'],
         ],
 
+        'internetdata' => [
+            'class' => \Torann\GeoIP\Services\InternetData::class,
+            'key' => env('INTERNETDATA_API_KEY'),
+        ],
+
     ],
 
     /*
